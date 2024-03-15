@@ -40,7 +40,7 @@ const MarketCap = () => {
 
     // Handle errors
     if (error) {
-        return <p>Error fetching data: {error}</p>;
+        return <p>Failed to fetch data. Please try again later.</p>;
     }
 
 

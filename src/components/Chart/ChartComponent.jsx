@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { IoCalendarOutline } from "react-icons/io5";
+import './ChartComponent.css';
 
 Chart.register(CategoryScale);
 
@@ -19,9 +20,14 @@ const ChartComponent = () => {
     const prices = useSelector((state) => state.chartData.prices);
     const loading = useSelector((state) => state.chartData.loading);
     const error = useSelector((state) => state.chartData.error);
+    const coins = useSelector((state) => state.coins.coins);
     const [days, setDays] = useState(1);
     const [selectedOption, setSelectedOption] = useState('Line');
     const [isOpen, setIsOpen] = useState(false);
+    const [isCryptoOpen, setIsCryptoOpen] = useState(false);
+    const [selectedCryptoOption, setSelectedCryptoOption] = useState('Bitcoin');
+    const [whichCoin, setWhichCoin] = useState('bitcoin');
+
 
     const lineHandler = () => {
         setSelectedOption('Line');
@@ -38,7 +44,7 @@ const ChartComponent = () => {
             dispatch(fetchChartData());
             try {
                 const response = await axios.get(
-                    `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=inr&days=${days}`
+                    `https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart?vs_currency=inr&days=${days}`
                 );
                 const dates = response.data.prices.map((price) => price[0]);
                 const prices = response.data.prices.map((price) => price[1]);
@@ -48,17 +54,15 @@ const ChartComponent = () => {
             }
         };
         fetchChartData1();
-    }, [dispatch, days]);
+    }, [dispatch, days, whichCoin]);
 
     if (loading) {
         return <p>Loading Data.....</p>;
     }
 
     if (error) {
-        return <p>Error fetching data: {error}</p>;
+        return <p>Failed to fetch data. Please try again later.</p>;
     }
-
-    // console.log(dates);
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
@@ -87,23 +91,26 @@ const ChartComponent = () => {
                 </div>
 
 
-
-
-
                 <div className="flex justify-between w-[47%] relative">
-                    <div className="flex  px-2.5 py-2.5  bg-gray-100 border rounded-lg justify-center items-center font-semibold ">
-                        <p className="mr-2 text-sm">Cryptocurrency</p>
-                        <VscTriangleDown
-                            className="mt-0.5"
-                            style={{ width: "1.1rem", height: "1.1rem" }}
-                        />
+                    <button onClick={() => setIsCryptoOpen(prev => !prev)} className="bg-gray-100 h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border px-3">
+                        <p className="mr-2">
+                            {selectedCryptoOption}
+                        </p>
+                        {isCryptoOpen ?
+                            <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} />
+                            : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
+                    </button>
+                    <div className="w-[13rem] h-[19.5rem] absolute top-[2.7rem] left-[0]">
+                        {isCryptoOpen && <div className="overflow-y-scroll h-[90%] bg-gray-100 border  rounded-t-lg  text-sm font-semibold justify-center">
+                            {coins.map((coin) => {
+                                return (
+                                    <div key={coin.id} onClick={() => { setWhichCoin(coin.id); setSelectedCryptoOption(coin.name); setIsCryptoOpen(!isCryptoOpen) }} className="w-[13rem] px-[0.79rem] flex items-center pt-[0.5rem] pb-[0.7rem] border-b border-gray-300 cursor-pointer text-sm font-semibold">
+                                        {coin.name}
+                                    </div>
+                                )
+                            })}
+                        </div>}
                     </div>
-                    {/* <div>
-                        <select value={selectedOption} onChange={(event) => (setSelectedOption(event.target.value))} className="bg-gray-100 w-[8rem] h-[2.5rem] rounded-lg border font-semibold text-sm">
-                            <option value="Line" className="text-sm font-semibold">Line</option>
-                            <option value="Bar" className="text-sm font-semibold">Bar</option>
-                        </select>
-                    </div> */}
                     <button onClick={() => setIsOpen(prev => !prev)} className="bg-gray-100 w-[5rem] h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border">
                         <p className="mr-2">
                             {selectedOption}
@@ -123,34 +130,6 @@ const ChartComponent = () => {
                 </div>
             </div>
             <div className="h-[85%]">
-                {/* <Line
-                data={{
-                    labels: dates.map((date) => {
-                        const fullDate = new Date(date);
-                        const hours = fullDate.getHours();
-                        const minutes = fullDate.getMinutes();
-                        const seconds = fullDate.getSeconds();
-                        const time = hours > 12
-                            ? `${hours - 12}:${minutes}:${seconds} PM`
-                            : `${hours}:${minutes}:${seconds} AM`
-                        return days === 1 ? time : fullDate.toLocaleDateString();
-                    }),
-                    datasets: [
-                        {
-                            label: `Price (Past ${days} Days) of Bitcoin`,
-                            data: prices,
-                        }
-                    ]
-                }}
-                options={{
-                    maintainAspectRatio: false,
-                    elements: {
-                        point: {
-                            pointRadius: 0,
-                        }
-                    }
-                }}
-            /> */}
 
                 {selectedOption === 'Line' ?
                     <Line
@@ -183,7 +162,7 @@ const ChartComponent = () => {
                             }),
                             datasets: [
                                 {
-                                    label: `Price (Past ${days} Days) of Bitcoin`,
+                                    label: `Price (Past ${days} Days) of ${selectedCryptoOption}`,
                                     data: prices,
                                 },
                             ],
@@ -249,7 +228,7 @@ const ChartComponent = () => {
                             }),
                             datasets: [
                                 {
-                                    label: `Price (Past ${days} Days) of Bitcoin`,
+                                    label: `Price (Past ${days} Days) of ${selectedCryptoOption}`,
                                     data: prices,
                                 },
                             ],
