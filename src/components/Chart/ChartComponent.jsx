@@ -18,8 +18,6 @@ const ChartComponent = () => {
     const dispatch = useDispatch();
     const dates = useSelector((state) => state.chartData.dates);
     const prices = useSelector((state) => state.chartData.prices);
-    const loading = useSelector((state) => state.chartData.loading);
-    const error = useSelector((state) => state.chartData.error);
     const coins = useSelector((state) => state.coins.coins);
     const [days, setDays] = useState(1);
     const [selectedOption, setSelectedOption] = useState('Line');
@@ -50,19 +48,12 @@ const ChartComponent = () => {
                 const prices = response.data.prices.map((price) => price[1]);
                 dispatch(fetchChartDataSuccess({ dates, prices }));
             } catch (error) {
+                console.log(error)
                 dispatch(fetchChartDataError(error));
             }
         };
         fetchChartData1();
     }, [dispatch, days, whichCoin]);
-
-    if (loading) {
-        return <p>Loading Data.....</p>;
-    }
-
-    if (error) {
-        return <p>Failed to fetch data. Please try again later.</p>;
-    }
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
@@ -89,7 +80,6 @@ const ChartComponent = () => {
                         </div>
                     </div>
                 </div>
-
 
                 <div className="flex justify-between w-[47%] relative">
                     <button onClick={() => setIsCryptoOpen(prev => !prev)} className="bg-gray-100 h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border px-3">
