@@ -11,14 +11,14 @@ const MarketCap = () => {
     const coins = useSelector((state) => state.coins.coins);
     const loading = useSelector((state) => state.coins.loading);
     const error = useSelector((state) => state.coins.error);
-    console.log("Hello3");
+    // console.log("Hello3");
 
     useEffect(() => {
         const fetchData1 = async () => {
             try {
                 dispatch(fetchData());
                 // const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
-                const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false');
+                const response = await axios.get('http://localhost:3000/api/coins/marketcap');
                 // const coins = await response.json();
                 const coins = await response.data;
                 dispatch(fetchDataSuccess(coins));
@@ -28,10 +28,10 @@ const MarketCap = () => {
         };
         dispatch(fetchData());
         fetchData1();
-        console.log("Hello1");
+        // console.log("Hello1");
     }, [dispatch]);
 
-    console.log("Hello2");
+    // console.log("Hello2");
 
     // Handle loading state
     if (loading) {

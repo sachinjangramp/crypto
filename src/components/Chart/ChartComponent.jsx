@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { CategoryScale, Chart } from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,20 +11,39 @@ import axios from "axios";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { IoCalendarOutline } from "react-icons/io5";
 import './ChartComponent.css';
+import 'chartjs-plugin-annotation';
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { ConvertToUnixTimeStamp } from "../../utils/ConvertToUnixTimeStamp";
 
 Chart.register(CategoryScale);
 
 const ChartComponent = () => {
     const dispatch = useDispatch();
-    const dates = useSelector((state) => state.chartData.dates);
-    const prices = useSelector((state) => state.chartData.prices);
+    const dates1 = useSelector((state) => state.chartData.dates1);
+    const dates2 = useSelector((state) => state.chartData.dates2);
+    const prices1 = useSelector((state) => state.chartData.prices1);
+    const prices2 = useSelector((state) => state.chartData.prices2);
     const coins = useSelector((state) => state.coins.coins);
-    const [days, setDays] = useState(1);
+    const [days, setDays] = useState(0);
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
+    const [counter, setCounter] = useState(0);
     const [selectedOption, setSelectedOption] = useState('Line');
     const [isOpen, setIsOpen] = useState(false);
     const [isCryptoOpen, setIsCryptoOpen] = useState(false);
-    const [selectedCryptoOption, setSelectedCryptoOption] = useState('Bitcoin');
-    const [whichCoin, setWhichCoin] = useState('bitcoin');
+    const [selectedCryptoOption, setSelectedCryptoOption] = useState(['Bitcoin']);
+    const [whichCoins, setWhichCoins] = useState(['bitcoin']);
+    const [checkedCoins, setCheckedCoins] = useState(['bitcoin']);
+    const [labelName, setLabelName] = useState(['Bitcoin']);
+    const [israngePickerOpen, setIsRangePickerOpen] = useState(false);
+    const [selectionRange, setSelectionRange] = useState({
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+    });
+    var previousDays = useRef(0);
 
 
     const lineHandler = () => {
@@ -37,23 +56,222 @@ const ChartComponent = () => {
         setIsOpen(!isOpen);
     }
 
+    const handleCryptoClick = (coin) => {
+        // setWhichCoin(coin.id);
+        // if (checkedCoins.includes(coin.id)) {
+        //     setCheckedCoins([...(checkedCoins.filter((c) => c !== coin.id))]);
+        //     setSelectedCryptoOption([...(selectedCryptoOption.filter((c) => coin.name !== c))]);
+        // } else {
+        //     if (checkedCoins.length < 2) {
+        //         setCheckedCoins([...checkedCoins, coin.id]);
+        //         setSelectedCryptoOption([...selectedCryptoOption, coin.name]);
+        //     }
+        // }
+        if (checkedCoins.includes(coin.id)) {
+            setCheckedCoins([...(checkedCoins.filter((c) => c !== coin.id))]);
+            setSelectedCryptoOption([...(selectedCryptoOption.filter((c) => coin.name !== c))]);
+        } else if (checkedCoins.length < 2) {
+            setCheckedCoins([...checkedCoins, coin.id]);
+            setSelectedCryptoOption([...selectedCryptoOption, coin.name]);
+        } else {
+            alert('The maximum selection allowed is 2.')
+        }
+    }
+
+    const handleDoneClick = () => {
+        setWhichCoins([...checkedCoins]);
+        setIsCryptoOpen(!isCryptoOpen);
+        setLabelName([...selectedCryptoOption]);
+    }
+
+    const calendarIconHandler = () => {
+        setIsRangePickerOpen(!israngePickerOpen);
+        setCounter((prevCounter) => prevCounter + 1);
+        setTimeout(() => {
+            console.log('selectionRange.startDate');
+            console.log(selectionRange.startDate);
+            console.log('selectionRange.endDate');
+            console.log(selectionRange.endDate);
+            console.log('selectionRange');
+            console.log(selectionRange);
+            // let temp = selectionRange;
+            const temp = {
+                ...selectionRange,
+                endDate: new Date(selectionRange.endDate), // Create a copy of the endDate
+            };
+            console.log(temp);
+            temp.endDate.setDate(temp.endDate.getDate() + 1);
+            console.log(temp);
+            // setSelectionRange(temp);
+            setSelectionRange(prevState => {
+                return { ...prevState, ...temp };
+            });
+            console.log('temp.startDate');
+            console.log(temp.startDate);
+            console.log('temp.endDate');
+            console.log(temp.endDate);
+            console.log('selectionRange.startDate');
+            console.log(selectionRange.startDate);
+            console.log('selectionRange.endDate');
+            console.log(selectionRange.endDate);
+            let startDate = ConvertToUnixTimeStamp(selectionRange.startDate);
+            let endDate = ConvertToUnixTimeStamp(selectionRange.endDate);
+            console.log(counter);
+            if (counter === 1) {
+                setCounter(prevCounter => prevCounter - 1);
+                setFrom(startDate);
+                setTo(endDate);
+                console.log('startDate:');
+                console.log(startDate);
+                console.log('endDate:');
+                console.log(endDate);
+            }
+        }, 0);
+    };
+
+    const handleSelect = (ranges) => {
+        setSelectionRange(ranges.selection);
+        // console.log(ranges.selection);
+        // {
+        //   selection: {
+        //     startDate: [native Date Object],
+        //     endDate: [native Date Object],
+        //   }
+        // }
+    };
+
     useEffect(() => {
         const fetchChartData1 = async () => {
             dispatch(fetchChartData());
             try {
-                const response = await axios.get(
-                    `https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart?vs_currency=inr&days=${days}`
-                );
-                const dates = response.data.prices.map((price) => price[0]);
-                const prices = response.data.prices.map((price) => price[1]);
-                dispatch(fetchChartDataSuccess({ dates, prices }));
+                if (days !== previousDays.current) {
+                    previousDays.current = days;
+                    const response1 = await axios.get(
+                        `http://localhost:3000/api/coins1?whichCoin=${whichCoins[0]}&days=${days}`
+                    );
+                    const dates1 = response1.data.prices.map((price) => price[0]);
+                    const prices1 = response1.data.prices.map((price) => price[1]);
+                    if (whichCoins.length === 2) {
+                        const response2 = await axios.get(
+                            `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
+                        );
+                        const dates2 = response2.data.prices.map((price) => price[0]);
+                        const prices2 = response2.data.prices.map((price) => price[1]);
+                        dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
+                    }
+                    else {
+                        dispatch(fetchChartDataSuccess({ dates1, prices1 }));
+                    }
+                }
+                else {
+                    const response1 = await axios.get(
+                        `http://localhost:3000/api/coins1/range?whichCoin=${whichCoins[0]}&from=${from}&to=${to}`
+                    );
+                    const dates1 = response1.data.prices.map((price) => price[0]);
+                    const prices1 = response1.data.prices.map((price) => price[1]);
+                    console.log('dates1:');
+                    console.log(dates1);
+                    console.log(prices1);
+                    if (whichCoins.length === 2) {
+                        const response2 = await axios.get(
+                            `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
+                        );
+                        const dates2 = response2.data.prices.map((price) => price[0]);
+                        const prices2 = response2.data.prices.map((price) => price[1]);
+                        dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
+                    }
+                    else {
+                        dispatch(fetchChartDataSuccess({ dates1, prices1 }));
+                    }
+                }
+
             } catch (error) {
                 console.log(error)
-                dispatch(fetchChartDataError(error));
+                dispatch(fetchChartDataError('Error fetching data.'));
             }
         };
         fetchChartData1();
-    }, [dispatch, days, whichCoin]);
+    }, [dispatch, days, whichCoins, from, to]);
+
+    // console.log('previousDays:');
+    // console.log(typeof previousDays);
+    // console.log(previousDays);
+    // console.log('days:');
+    // console.log(typeof days);
+    // console.log(days);
+
+
+    // if (dates1) {
+    //     console.log(dates1);
+    //     console.log(dates1.map((date) => {
+    //         const datee = new Date(date);
+    //         return datee.toLocaleDateString()
+    //     }));
+    // }
+
+    // if (dates2){
+    //     console.log(dates1);
+    //     console.log(dates1.map((date) => {
+    //         const datee = new Date(date);
+    //         return datee.toLocaleDateString()
+    //     }));
+    // }
+
+    // if (prices1)
+    //     console.log("prices1:" );
+    //     console.log(prices1);
+    // if (prices2){
+    //     console.log("prices2:" );
+    //     console.log(prices2);
+    // }
+
+    const datasets = prices2 ? [
+        {
+            label: ` ${labelName[0]} Price`,
+            data: prices1,
+            borderColor: '#36A2EB',
+            backgroundColor: '#9BD0F5',
+        },
+        {
+            label: ` ${labelName[1]} Price`,
+            data: prices2,
+            borderColor: '#FF6384',
+            backgroundColor: '#FFB1C1',
+
+        },
+        {
+            label: '',
+            data: prices1.map(() => null), // Create transparent data points for Dataset 1
+            pointRadius: 0, // Make points invisible
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            borderColor: 'rgba(255, 255, 255, 0)',
+            hidden: true
+        },
+        {
+            label: '',
+            data: prices2.map(() => null), // Create transparent data points for Dataset 2
+            pointRadius: 0, // Make points invisible
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            borderColor: 'rgba(255, 255, 255, 0)',
+            hidden: true
+        },
+    ] : [
+        {
+            label: ` ${labelName[0]} Price`,
+            data: prices1,
+            borderColor: '#36A2EB',
+            backgroundColor: '#9BD0F5',
+        },
+        {
+            label: '',
+            data: prices1.map(() => null), // Create transparent data points for Dataset
+            pointRadius: 0, // Make points invisible
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            borderColor: 'rgba(255, 255, 255, 0)',
+            hidden: true
+        },
+    ];
+
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
@@ -74,33 +292,44 @@ const ChartComponent = () => {
                     <div onClick={() => (setDays(365))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>1Y</p>
                     </div>
-                    <div className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
-                        <div>
+                    <div onClick={() => calendarIconHandler()} className="relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                        <div className="">
                             <IoCalendarOutline />
                         </div>
                     </div>
                 </div>
 
+                {israngePickerOpen && <div className="absolute top-[27.2%] left-[29.9%] z-10 border-2 border-[#afafaf]">
+                    <DateRangePicker
+                        className=""
+                        ranges={[selectionRange]}
+                        onChange={handleSelect}
+                    // rangeColors={["#FDA403"]}
+                    // color={"#FDA403"}
+                    />
+                </div>}
+
                 <div className="flex justify-between w-[47%] relative">
                     <button onClick={() => setIsCryptoOpen(prev => !prev)} className="bg-gray-100 h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border px-3">
                         <p className="mr-2">
-                            {selectedCryptoOption}
+                            {selectedCryptoOption.join(', ')}
                         </p>
                         {isCryptoOpen ?
                             <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} />
                             : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
                     </button>
-                    <div className="w-[13rem] h-[19.5rem] absolute top-[2.7rem] left-[0]">
+                    {isCryptoOpen && <div className="w-[13rem] h-[19.5rem] absolute top-[2.7rem] left-[0]">
                         {isCryptoOpen && <div className="overflow-y-scroll h-[90%] bg-gray-100 border  rounded-t-lg  text-sm font-semibold justify-center">
                             {coins.map((coin) => {
                                 return (
-                                    <div key={coin.id} onClick={() => { setWhichCoin(coin.id); setSelectedCryptoOption(coin.name); setIsCryptoOpen(!isCryptoOpen) }} className="w-[13rem] px-[0.79rem] flex items-center pt-[0.5rem] pb-[0.7rem] border-b border-gray-300 cursor-pointer text-sm font-semibold">
-                                        {coin.name}
+                                    <div key={coin.id} onClick={() => handleCryptoClick(coin)} className="w-[13rem] px-[0.79rem] flex items-center pt-[0.5rem] pb-[0.7rem] border-b border-gray-300 cursor-pointer text-sm font-semibold">
+                                        <input type="checkbox" checked={checkedCoins.includes(coin.id)} onChange={() => { }} className="mr-2 cursor-pointer " />{coin.name}
                                     </div>
                                 )
                             })}
                         </div>}
-                    </div>
+                        {isCryptoOpen && <button onClick={() => handleDoneClick()} className="w-full py-2 text-white rounded-b-lg bg-gradient-to-r from-cyan-500 to-blue-500">Done</button>}
+                    </div>}
                     <button onClick={() => setIsOpen(prev => !prev)} className="bg-gray-100 w-[5rem] h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border">
                         <p className="mr-2">
                             {selectedOption}
@@ -124,7 +353,7 @@ const ChartComponent = () => {
                 {selectedOption === 'Line' ?
                     <Line
                         data={{
-                            labels: dates.map((date, index) => {
+                            labels: dates1.map((date, index) => {
                                 const fullDate = new Date(date);
                                 const hours = fullDate.getHours();
                                 const minutes = fullDate.getMinutes();
@@ -147,18 +376,16 @@ const ChartComponent = () => {
                                 }
                                 const finalDate =
                                     extractedDate.slice(0, pos) + extractedDate.slice(pos + 2);
-                                console.log(finalDate);
                                 return days === 1 ? time : finalDate;
                             }),
-                            datasets: [
-                                {
-                                    label: `Price (Past ${days} Days) of ${selectedCryptoOption}`,
-                                    data: prices,
-                                },
-                            ],
+                            datasets: datasets,
                         }}
                         options={{
                             maintainAspectRatio: false,
+                            pointHoverRadius: 7,
+                            pointHitRadius: 10,
+                            hoverBackgroundColor: 'white',
+                            pointHoverBorderWidth: 3,
                             scales: {
                                 x: {
                                     ticks: {
@@ -185,12 +412,26 @@ const ChartComponent = () => {
                                 point: {
                                     pointRadius: 0,
                                 }
-                            }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    usePointStyle: true,
+                                    mode: 'index', // Show tooltip for all points
+                                    intersect: false, // Allow tooltips to intersect with items
+                                },
+                                legend: {
+                                    align: 'end',
+                                    labels: {
+                                        usePointStyle: true,
+                                        pointStyle: 'circle'
+                                    }
+                                }
+                            },
                         }}
                     /> :
                     <Bar
                         data={{
-                            labels: dates.map((date, index) => {
+                            labels: dates1.map((date, index) => {
                                 const fullDate = new Date(date);
                                 const hours = fullDate.getHours();
                                 const minutes = fullDate.getMinutes();
@@ -213,18 +454,16 @@ const ChartComponent = () => {
                                 }
                                 const finalDate =
                                     extractedDate.slice(0, pos) + extractedDate.slice(pos + 2);
-                                console.log(finalDate);
                                 return days === 1 ? time : finalDate;
                             }),
-                            datasets: [
-                                {
-                                    label: `Price (Past ${days} Days) of ${selectedCryptoOption}`,
-                                    data: prices,
-                                },
-                            ],
+                            datasets: datasets,
                         }}
                         options={{
                             maintainAspectRatio: false,
+                            pointHoverRadius: 7,
+                            pointHitRadius: 10,
+                            hoverBackgroundColor: 'white',
+                            pointHoverBorderWidth: 3,
                             scales: {
                                 x: {
                                     ticks: {
@@ -251,7 +490,21 @@ const ChartComponent = () => {
                                 point: {
                                     pointRadius: 0,
                                 }
-                            }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    usePointStyle: true,
+                                    mode: 'index', // Show tooltip for all points
+                                    intersect: false, // Allow tooltips to intersect with items
+                                },
+                                legend: {
+                                    align: 'end',
+                                    labels: {
+                                        usePointStyle: true,
+                                        pointStyle: 'circle'
+                                    }
+                                }
+                            },
                         }}
                     />
                 }
