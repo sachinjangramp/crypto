@@ -94,7 +94,6 @@ const ChartComponent = () => {
             //     ...selectionRange,
             //     endDate: new Date(selectionRange.endDate), // Create a copy of the endDate
             // };
-            // temp.endDate.setDate(temp.endDate.getDate() + 86400000);
             if (isRangeChanged === true) {
                 temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
                 setIsRangeChanged((prev) => !prev);
@@ -127,7 +126,7 @@ const ChartComponent = () => {
 
     const handleSelect = (ranges) => {
         setSelectionRange(ranges.selection);
-        setIsRangeChanged((prev) => !prev);
+        setIsRangeChanged(true);
         // console.log(ranges.selection);
         // {
         //   selection: {
@@ -269,6 +268,12 @@ const ChartComponent = () => {
         },
     ];
 
+    // console.log('selectionRange.endDate:')
+    // console.log(selectionRange.endDate);
+    // console.log('new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000):');
+    // let da = new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000)
+    // console.log(da);
+
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
@@ -373,7 +378,7 @@ const ChartComponent = () => {
                                 }
                                 const finalDate =
                                     extractedDate.slice(0, pos) + extractedDate.slice(pos + 2);
-                                return days === 1 ? time : finalDate;
+                                return days === 1 || selectionRange.endDate === (new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000)) ? time : finalDate;
                             }),
                             datasets: datasets,
                         }}
