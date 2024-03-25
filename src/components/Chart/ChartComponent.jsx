@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { flushSync } from 'react-dom'
 import { Bar, Line } from "react-chartjs-2";
 import { CategoryScale, Chart } from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,6 +44,7 @@ const ChartComponent = () => {
         endDate: new Date(),
         key: 'selection',
     });
+    const [isRangeChanged, setIsRangeChanged] = useState(false);
     var previousDays = useRef(0);
 
 
@@ -86,26 +88,22 @@ const ChartComponent = () => {
 
     const calendarIconHandler = () => {
         setIsRangePickerOpen(!israngePickerOpen);
-        setCounter((prevCounter) => prevCounter + 1);
         setTimeout(() => {
-            console.log('selectionRange.startDate');
-            console.log(selectionRange.startDate);
-            console.log('selectionRange.endDate');
-            console.log(selectionRange.endDate);
-            console.log('selectionRange');
-            console.log(selectionRange);
-            // let temp = selectionRange;
-            const temp = {
-                ...selectionRange,
-                endDate: new Date(selectionRange.endDate), // Create a copy of the endDate
-            };
-            console.log(temp);
-            temp.endDate.setDate(temp.endDate.getDate() + 1);
+            let temp = selectionRange;
+            // const temp = {
+            //     ...selectionRange,
+            //     endDate: new Date(selectionRange.endDate), // Create a copy of the endDate
+            // };
+            // temp.endDate.setDate(temp.endDate.getDate() + 86400000);
+            if (isRangeChanged === true) {
+                temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
+                setIsRangeChanged((prev) => !prev);
+            }
             console.log(temp);
             // setSelectionRange(temp);
-            setSelectionRange(prevState => {
-                return { ...prevState, ...temp };
-            });
+            // setSelectionRange(prevState => {
+            //     return { ...prevState, ...temp };
+            // });
             console.log('temp.startDate');
             console.log(temp.startDate);
             console.log('temp.endDate');
@@ -116,21 +114,20 @@ const ChartComponent = () => {
             console.log(selectionRange.endDate);
             let startDate = ConvertToUnixTimeStamp(selectionRange.startDate);
             let endDate = ConvertToUnixTimeStamp(selectionRange.endDate);
-            console.log(counter);
             if (counter === 1) {
+                console.log('andar')
                 setCounter(prevCounter => prevCounter - 1);
                 setFrom(startDate);
                 setTo(endDate);
-                console.log('startDate:');
-                console.log(startDate);
-                console.log('endDate:');
-                console.log(endDate);
+            } else {
+                setCounter((prevCounter) => prevCounter + 1);
             }
         }, 0);
     };
 
     const handleSelect = (ranges) => {
         setSelectionRange(ranges.selection);
+        setIsRangeChanged((prev) => !prev);
         // console.log(ranges.selection);
         // {
         //   selection: {
