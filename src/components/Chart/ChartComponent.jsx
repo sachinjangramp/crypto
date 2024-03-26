@@ -43,8 +43,9 @@ const ChartComponent = () => {
         endDate: new Date(),
         key: 'selection',
     });
+    const [run, setRun] = useState(0.6809836734145203);
+    const [clicked, setClicked] = useState(true);
     const [isRangeChanged, setIsRangeChanged] = useState(false);
-    var previousDays = useRef(0);
 
 
     const lineHandler = () => {
@@ -117,8 +118,8 @@ const ChartComponent = () => {
         const fetchChartData1 = async () => {
             dispatch(fetchChartData());
             try {
-                if (days !== previousDays.current) {
-                    previousDays.current = days;
+                if (clicked) {
+                    setClicked((prev) => !prev);
                     const response1 = await axios.get(
                         `http://localhost:3000/api/coins1?whichCoin=${whichCoins[0]}&days=${days}`
                     );
@@ -164,7 +165,7 @@ const ChartComponent = () => {
             }
         };
         fetchChartData1();
-    }, [dispatch, days, whichCoins, from, to]);
+    }, [dispatch, run, whichCoins, from, to]);
 
     // console.log('previousDays:');
     // console.log(typeof previousDays);
@@ -250,19 +251,19 @@ const ChartComponent = () => {
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
             <div className="flex items-center justify-between w-full">
                 <div className="grid grid-rows-1 gap-1 grid-cols-6 w-[19rem] h-[2rem] text-sm">
-                    <div onClick={() => (setDays(1))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(1); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>1D</p>
                     </div>
-                    <div onClick={() => (setDays(7))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(7); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>1W</p>
                     </div>
-                    <div onClick={() => (setDays(30))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(30); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>1M</p>
                     </div>
-                    <div onClick={() => (setDays(180))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(180); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>6M</p>
                     </div>
-                    <div onClick={() => (setDays(365))} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(365); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
                         <p>1Y</p>
                     </div>
                     <div onClick={() => calendarIconHandler()} className="relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
