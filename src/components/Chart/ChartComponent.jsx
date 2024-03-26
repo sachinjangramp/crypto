@@ -27,10 +27,9 @@ const ChartComponent = () => {
     const prices1 = useSelector((state) => state.chartData.prices1);
     const prices2 = useSelector((state) => state.chartData.prices2);
     const coins = useSelector((state) => state.coins.coins);
-    const [days, setDays] = useState(0);
+    const [days, setDays] = useState(1);
     const [from, setFrom] = useState();
     const [to, setTo] = useState();
-    const [counter, setCounter] = useState(0);
     const [selectedOption, setSelectedOption] = useState('Line');
     const [isOpen, setIsOpen] = useState(false);
     const [isCryptoOpen, setIsCryptoOpen] = useState(false);
@@ -59,16 +58,6 @@ const ChartComponent = () => {
     }
 
     const handleCryptoClick = (coin) => {
-        // setWhichCoin(coin.id);
-        // if (checkedCoins.includes(coin.id)) {
-        //     setCheckedCoins([...(checkedCoins.filter((c) => c !== coin.id))]);
-        //     setSelectedCryptoOption([...(selectedCryptoOption.filter((c) => coin.name !== c))]);
-        // } else {
-        //     if (checkedCoins.length < 2) {
-        //         setCheckedCoins([...checkedCoins, coin.id]);
-        //         setSelectedCryptoOption([...selectedCryptoOption, coin.name]);
-        //     }
-        // }
         if (checkedCoins.includes(coin.id)) {
             setCheckedCoins([...(checkedCoins.filter((c) => c !== coin.id))]);
             setSelectedCryptoOption([...(selectedCryptoOption.filter((c) => coin.name !== c))]);
@@ -88,44 +77,32 @@ const ChartComponent = () => {
 
     const calendarIconHandler = () => {
         setIsRangePickerOpen(!israngePickerOpen);
-        setTimeout(() => {
-            let temp = selectionRange;
-            // const temp = {
-            //     ...selectionRange,
-            //     endDate: new Date(selectionRange.endDate), // Create a copy of the endDate
-            // };
-            if (isRangeChanged === true) {
-                temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
-                setIsRangeChanged((prev) => !prev);
-            }
-            console.log(temp);
-            // setSelectionRange(temp);
-            // setSelectionRange(prevState => {
-            //     return { ...prevState, ...temp };
-            // });
-            console.log('temp.startDate');
-            console.log(temp.startDate);
-            console.log('temp.endDate');
-            console.log(temp.endDate);
-            console.log('selectionRange.startDate');
-            console.log(selectionRange.startDate);
-            console.log('selectionRange.endDate');
-            console.log(selectionRange.endDate);
-            let startDate = ConvertToUnixTimeStamp(selectionRange.startDate);
-            let endDate = ConvertToUnixTimeStamp(selectionRange.endDate);
-            if (counter === 1) {
-                console.log('andar')
-                setCounter(prevCounter => prevCounter - 1);
-                setFrom(startDate);
-                setTo(endDate);
-            } else {
-                setCounter((prevCounter) => prevCounter + 1);
-            }
-        }, 0);
+        const temp = { ...selectionRange };
+        if (isRangeChanged === true) {
+            temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
+        }
+        console.log(temp);
+        console.log('temp.startDate');
+        console.log(temp.startDate);
+        console.log('temp.endDate');
+        console.log(temp.endDate);
+        console.log('selectionRange.startDate');
+        console.log(selectionRange.startDate);
+        console.log('selectionRange.endDate');
+        console.log(selectionRange.endDate);
+        let startDate = ConvertToUnixTimeStamp(temp.startDate);
+        let endDate = ConvertToUnixTimeStamp(temp.endDate);
+        if (isRangeChanged) {
+            setIsRangeChanged((prev) => !prev);
+            setFrom(startDate);
+            setTo(endDate);
+        }
     };
 
     const handleSelect = (ranges) => {
         setSelectionRange(ranges.selection);
+        console.log('selectionRange')
+        console.log(selectionRange)
         setIsRangeChanged(true);
         // console.log(ranges.selection);
         // {
@@ -268,12 +245,6 @@ const ChartComponent = () => {
         },
     ];
 
-    // console.log('selectionRange.endDate:')
-    // console.log(selectionRange.endDate);
-    // console.log('new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000):');
-    // let da = new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000)
-    // console.log(da);
-
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
@@ -378,7 +349,7 @@ const ChartComponent = () => {
                                 }
                                 const finalDate =
                                     extractedDate.slice(0, pos) + extractedDate.slice(pos + 2);
-                                return days === 1 || selectionRange.endDate === (new Date(selectionRange.startDate.getTime() + 24 * 60 * 60 * 1000)) ? time : finalDate;
+                                return days === 1 || to === (from + 86400) ? time : finalDate;
                             }),
                             datasets: datasets,
                         }}
@@ -456,7 +427,7 @@ const ChartComponent = () => {
                                 }
                                 const finalDate =
                                     extractedDate.slice(0, pos) + extractedDate.slice(pos + 2);
-                                return days === 1 ? time : finalDate;
+                                return days === 1 || to === (from + 86400) ? time : finalDate;
                             }),
                             datasets: datasets,
                         }}
