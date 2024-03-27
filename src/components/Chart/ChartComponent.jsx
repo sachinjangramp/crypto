@@ -105,15 +105,15 @@ const ChartComponent = () => {
                 if (clicked) {
                     setClicked((prev) => !prev);
                     const response1 = await axios.get(
-                        `http://localhost:3000/api/coins1?whichCoin=${whichCoins[0]}&days=${days}`
-                        // `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
+                        // `http://localhost:3000/api/coins1?whichCoin=${whichCoins[0]}&days=${days}`
+                        `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                     );
                     const dates1 = response1.data.prices.map((price) => price[0]);
                     const prices1 = response1.data.prices.map((price) => price[1]);
                     if (whichCoins.length === 2) {
                         const response2 = await axios.get(
-                            `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
-                            // `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
+                            // `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
+                            `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                         );
                         const dates2 = response2.data.prices.map((price) => price[0]);
                         const prices2 = response2.data.prices.map((price) => price[1]);
@@ -125,15 +125,15 @@ const ChartComponent = () => {
                 }
                 else {
                     const response1 = await axios.get(
-                        `http://localhost:3000/api/coins1/range?whichCoin=${whichCoins[0]}&from=${from}&to=${to}`
-                        // `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
+                        // `http://localhost:3000/api/coins1/range?whichCoin=${whichCoins[0]}&from=${from}&to=${to}`
+                        `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                     );
                     const dates1 = response1.data.prices.map((price) => price[0]);
                     const prices1 = response1.data.prices.map((price) => price[1]);
                     if (whichCoins.length === 2) {
                         const response2 = await axios.get(
-                            `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
-                            // `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
+                            // `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
+                            `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                         );
                         const dates2 = response2.data.prices.map((price) => price[0]);
                         const prices2 = response2.data.prices.map((price) => price[1]);
