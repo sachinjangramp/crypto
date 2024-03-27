@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { flushSync } from 'react-dom'
+import React, { useEffect, useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { CategoryScale, Chart } from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +26,7 @@ const ChartComponent = () => {
     const prices1 = useSelector((state) => state.chartData.prices1);
     const prices2 = useSelector((state) => state.chartData.prices2);
     const coins = useSelector((state) => state.coins.coins);
+    const vsCurrency = useSelector((state) => state.vsCurrency.vsCurrency);
     const [days, setDays] = useState(1);
     const [from, setFrom] = useState();
     const [to, setTo] = useState();
@@ -82,15 +82,6 @@ const ChartComponent = () => {
         if (isRangeChanged === true) {
             temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
         }
-        console.log(temp);
-        console.log('temp.startDate');
-        console.log(temp.startDate);
-        console.log('temp.endDate');
-        console.log(temp.endDate);
-        console.log('selectionRange.startDate');
-        console.log(selectionRange.startDate);
-        console.log('selectionRange.endDate');
-        console.log(selectionRange.endDate);
         let startDate = ConvertToUnixTimeStamp(temp.startDate);
         let endDate = ConvertToUnixTimeStamp(temp.endDate);
         if (isRangeChanged) {
@@ -105,13 +96,6 @@ const ChartComponent = () => {
         console.log('selectionRange')
         console.log(selectionRange)
         setIsRangeChanged(true);
-        // console.log(ranges.selection);
-        // {
-        //   selection: {
-        //     startDate: [native Date Object],
-        //     endDate: [native Date Object],
-        //   }
-        // }
     };
 
     useEffect(() => {
@@ -122,12 +106,14 @@ const ChartComponent = () => {
                     setClicked((prev) => !prev);
                     const response1 = await axios.get(
                         `http://localhost:3000/api/coins1?whichCoin=${whichCoins[0]}&days=${days}`
+                        // `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                     );
                     const dates1 = response1.data.prices.map((price) => price[0]);
                     const prices1 = response1.data.prices.map((price) => price[1]);
                     if (whichCoins.length === 2) {
                         const response2 = await axios.get(
                             `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
+                            // `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                         );
                         const dates2 = response2.data.prices.map((price) => price[0]);
                         const prices2 = response2.data.prices.map((price) => price[1]);
@@ -140,15 +126,14 @@ const ChartComponent = () => {
                 else {
                     const response1 = await axios.get(
                         `http://localhost:3000/api/coins1/range?whichCoin=${whichCoins[0]}&from=${from}&to=${to}`
+                        // `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                     );
                     const dates1 = response1.data.prices.map((price) => price[0]);
                     const prices1 = response1.data.prices.map((price) => price[1]);
-                    console.log('dates1:');
-                    console.log(dates1);
-                    console.log(prices1);
                     if (whichCoins.length === 2) {
                         const response2 = await axios.get(
                             `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
+                            // `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                         );
                         const dates2 = response2.data.prices.map((price) => price[0]);
                         const prices2 = response2.data.prices.map((price) => price[1]);
@@ -166,38 +151,6 @@ const ChartComponent = () => {
         };
         fetchChartData1();
     }, [dispatch, run, whichCoins, from, to]);
-
-    // console.log('previousDays:');
-    // console.log(typeof previousDays);
-    // console.log(previousDays);
-    // console.log('days:');
-    // console.log(typeof days);
-    // console.log(days);
-
-
-    // if (dates1) {
-    //     console.log(dates1);
-    //     console.log(dates1.map((date) => {
-    //         const datee = new Date(date);
-    //         return datee.toLocaleDateString()
-    //     }));
-    // }
-
-    // if (dates2){
-    //     console.log(dates1);
-    //     console.log(dates1.map((date) => {
-    //         const datee = new Date(date);
-    //         return datee.toLocaleDateString()
-    //     }));
-    // }
-
-    // if (prices1)
-    //     console.log("prices1:" );
-    //     console.log(prices1);
-    // if (prices2){
-    //     console.log("prices2:" );
-    //     console.log(prices2);
-    // }
 
     const datasets = prices2 ? [
         {

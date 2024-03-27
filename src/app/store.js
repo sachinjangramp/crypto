@@ -2,6 +2,7 @@ import {configureStore} from '@reduxjs/toolkit';
 // import {combineReducers} from 'redux';
 import coinsReducer from '../features/coins/coinsSlice';
 import chartDataReducer from '../features/chartData/chartDataSlice'
+import vsCurrencyReducer from '../features/vsCurrency/vsCurrencySlice'
 
 // const rootReducer = combineReducers({
 //     coins : coinsReducer,
@@ -16,6 +17,7 @@ const store = configureStore({
     reducer: {
         coins: coinsReducer,
         chartData: chartDataReducer,
+        vsCurrency: vsCurrencyReducer,
     }
 })
 

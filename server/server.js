@@ -11,9 +11,9 @@ app.use(cors({
 
 app.get('/api/coins1', async (req, res) => {
     try {
-        const { whichCoin, days } = req.query;
+        const { whichCoin, days} = req.query;
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart?vs_currency=inr&days=${days}`);
-        console.log(response);
+        // console.log(response);
         res.json(response.data);
     } catch (error) {
         console.error('Error:', error);
@@ -23,7 +23,7 @@ app.get('/api/coins1', async (req, res) => {
 
 app.get('/api/coins2', async (req, res) => {
     try {
-        const { whichCoin, days } = req.query;
+        const { whichCoin, days} = req.query;
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart?vs_currency=inr&days=${days}`);
         res.json(response.data);
     } catch (error) {
@@ -34,10 +34,10 @@ app.get('/api/coins2', async (req, res) => {
 
 app.get('/api/coins1/range', async (req, res) => {
     try {
-        const { whichCoin, from, to } = req.query;
+        const { whichCoin, from, to} = req.query;
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart/range?vs_currency=inr&from=${from}&to=${to}`);
-        console.log('response:');
-        console.log(response.data);
+        // console.log('response:');
+        // console.log(response.data);
         res.json(response.data);
     } catch (error) {
         console.error('Error:', error);
@@ -47,7 +47,7 @@ app.get('/api/coins1/range', async (req, res) => {
 
 app.get('/api/coins2/range', async (req, res) => {
     try {
-        const { whichCoin, from, to } = req.query;
+        const { whichCoin, from, to} = req.query;
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${whichCoin}/market_chart/range?vs_currency=inr&from=${from}&to=${to}`);
         res.json(response.data);
     } catch (error) {
@@ -58,7 +58,8 @@ app.get('/api/coins2/range', async (req, res) => {
 
 app.get('/api/coins/marketcap', async (req, res) => {
     try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false');
+        const {vsCurrency} = req.query;
+        const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${vsCurrency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
         res.json(response.data);
     } catch (error) {
         console.error('Error:', error);
