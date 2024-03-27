@@ -150,7 +150,7 @@ const ChartComponent = () => {
             }
         };
         fetchChartData1();
-    }, [dispatch, run, whichCoins, from, to]);
+    }, [dispatch, run, whichCoins, from, to, vsCurrency]);
 
     const datasets = prices2 ? [
         {
