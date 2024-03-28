@@ -11,7 +11,7 @@ const MarketCap = () => {
     const coins = useSelector((state) => state.coins.coins);
     const loading = useSelector((state) => state.coins.loading);
     const error = useSelector((state) => state.coins.error);
-
+    const searchKey = useSelector((state) => state.searchKey.searchKey);
     useEffect(() => {
         const fetchData1 = async () => {
             try {
@@ -40,6 +40,7 @@ const MarketCap = () => {
         return <p>Failed to fetch data. Please try again later.</p>;
     }
 
+    const filteredCoins = coins.filter((coin) => coin.name.toUpperCase().includes(searchKey.toUpperCase()));
 
 
     return (
@@ -50,7 +51,7 @@ const MarketCap = () => {
                 </h1>
             </div>
             <div className='h-[92%] overflow-y-scroll'>
-                {coins.map((coin) => (
+                {filteredCoins.map((coin) => (
                     <div key={coin.id} className='flex justify-between py-5 pl-3 pr-5 border-y'>
                         <div className='flex items-center pr-1'>
                             <img src={coin.image} className='w-12' alt="" />
