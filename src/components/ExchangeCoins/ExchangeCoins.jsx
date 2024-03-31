@@ -1,23 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import './ExchangeCoins.css';
-import { fetchDataSuccess } from '../../features/yourCoins/yourCoinsSlice'
+import { fetchDataSuccess, fetchData, fetchDataError } from '../../features/yourCoins/yourCoinsSlice'
 
 
 const ExchangeCoins = () => {
     const dispatch = useDispatch();
     const yourCoins = useSelector((state) => state.yourCoins.yourCoins);
     const [sellCoin, setSellCoin] = useState(Object.keys(yourCoins[0])[0]);
-    const [sellInputValue, setSellInputValue] = useState();
-    const [buyOutputValue, setBuyOutputValue] = useState();
+    const [sellInputValue, setSellInputValue] = useState(0);
+    const [buyOutputValue, setBuyOutputValue] = useState(0);
     const [isSellOpen, setIsSellOpen] = useState(false);
     const [isBuyOpen, setIsBuyOpen] = useState(false);
     const [currentValue, setCurrentValue] = useState();
     const [buyCurrencies, setBuyCurrencies] = useState([]);
     const [buyCoin, setBuyCoin] = useState();
     const [unit, setUnit] = useState(yourCoins[0]['unit']);
+    const [buyUnit, setBuyUnit] = useState();
 
     const sellButtonHandler = () => {
         setIsSellOpen((prev) => !prev);
@@ -26,32 +27,13 @@ const ExchangeCoins = () => {
     const sellHandler = (currency) => {
         setSellCoin(Object.keys(currency)[0]);
         setIsSellOpen((prev) => !prev);
-        // for (let value of buyCurrencies) {
-        //     if (value.name === Object.keys(coin)[0]) {
-        //         setUnit(value.unit);
-        //         break;
-        //     }
-        // }
         setUnit(currency['unit']);
     }
 
     const sellInputHandler = (event) => {
-        let a = 0;
-        let totalBitcoins = 0;
         if (event.target.value > currentValue)
             event.target.value = currentValue;
         setSellInputValue(event.target.value);
-        for (const currency of buyCurrencies) {
-            if (currency['name'] === sellCoin) {
-                a = currency['value'];
-                totalBitcoins = event.target.value / a;
-            }
-        }
-        for (const currency of buyCurrencies) {
-            if (currency['name'] === buyCoin) {
-                setBuyOutputValue(currency['value'] * totalBitcoins);
-            }
-        }
     }
 
     const buyButtonHandler = () => {
@@ -62,6 +44,15 @@ const ExchangeCoins = () => {
     const buyHandler = (currency) => {
         setBuyCoin(currency['name']);
         setIsBuyOpen((prev) => !prev);
+    }
+
+    const exchangeHandler = () => {
+        dispatch(fetchData());
+        try {
+            dispatch(fetchDataSuccess([{ [sellCoin]: sellInputValue }, { [buyCoin]: buyOutputValue, unit: buyUnit }]));
+        } catch (error) {
+            dispatch(fetchDataError('Error fetching data...'));
+        }
     }
 
     const fetchApiData = async () => {
@@ -93,13 +84,30 @@ const ExchangeCoins = () => {
     useEffect(() => {
         if (buyCurrencies[0])
             setBuyCoin(buyCurrencies[0]['name']);
-    }, [buyCurrencies])
+    }, [buyCurrencies]);
 
-    // useEffect(() => {
-    //     dispatch(fetchDataSuccess([{ 'sachin': 3 }]));
-    // }, [dispatch]);
+    useEffect(() => {
+        let a = 0;
+        let totalBitcoins = 0;
+        if (buyCurrencies[0] && buyCoin) {
+            for (const currency of buyCurrencies) {
+                if (currency['name'] === sellCoin) {
+                    a = currency['value'];
+                    totalBitcoins = sellInputValue / a;
+                }
+            }
+            for (const currency of buyCurrencies) {
+                if (currency['name'] === buyCoin) {
+                    setBuyUnit(currency['unit']);
+                    setBuyOutputValue(currency['value'] * totalBitcoins);
+                }
+            }
+        }
+    }, [buyCoin, sellCoin, sellInputValue]);
 
     const topPosition = `${-((yourCoins.length) * 2.7) - 0.2}rem`;
+
+    console.log(yourCoins);
 
     return (
         <div className='p-5'>
@@ -117,7 +125,7 @@ const ExchangeCoins = () => {
                             {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[10rem] font-semibold px-4 capitalize ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
                         </div>}
                     </div>
-                    <input onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border-gray-300 border rounded-lg' />
+                    <input onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border-gray-300 border rounded-lg' />
                 </div>
                 <div className='flex items-center mt-[0.5rem]'>
                     <span className='text-sm font-semibold text-green-500 mr-[1rem]'>Buy</span>
@@ -133,7 +141,7 @@ const ExchangeCoins = () => {
                     <div className='h-[2.7rem] w-[8rem] ml-[2.5rem] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
                 </div>
             </div>
-            <button className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] rounded-lg mx-auto block mt-4'>Exchange</button>
+            <button onClick={exchangeHandler} className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] rounded-lg mx-auto block mt-4'>Exchange</button>
         </div>
     )
 }
