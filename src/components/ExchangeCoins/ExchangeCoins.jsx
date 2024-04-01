@@ -14,7 +14,7 @@ const ExchangeCoins = () => {
     const [buyOutputValue, setBuyOutputValue] = useState(0);
     const [isSellOpen, setIsSellOpen] = useState(false);
     const [isBuyOpen, setIsBuyOpen] = useState(false);
-    const [currentValue, setCurrentValue] = useState();
+    const [currentValue, setCurrentValue] = useState(0);
     const [buyCurrencies, setBuyCurrencies] = useState([]);
     const [buyCoin, setBuyCoin] = useState();
     const [unit, setUnit] = useState(yourCoins[0]['unit']);
@@ -22,6 +22,7 @@ const ExchangeCoins = () => {
 
     const sellButtonHandler = () => {
         setIsSellOpen((prev) => !prev);
+        setSellInputValue(0);
     }
 
     const sellHandler = (currency) => {
@@ -118,24 +119,24 @@ const ExchangeCoins = () => {
                     <span className='text-sm font-semibold text-red-500 mr-[1.2rem]'>Sell</span>
                     <div className='relative'>
                         <button onClick={sellButtonHandler} className='bg-gray-100 h-[2.7rem] border-none flex justify-between items-center text-base text-gray-600 w-[10rem] font-semibold rounded-lg border px-4'>
-                            <p className='capitalize'>{sellCoin}</p>
+                            <p className='overflow-hidden whitespace-nowrap w-[100%]'>{sellCoin}</p>
                             {isSellOpen ? <VscTriangleUp size={'20'} /> : <VscTriangleDown size={'20'} />}
                         </button>
                         {isSellOpen && <div className={`absolute text-sm z-10 font-semibold bg-gray-100 rounded-lg`} style={{ top: topPosition }}>
-                            {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[10rem] font-semibold px-4 capitalize ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
+                            {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
                         </div>}
                     </div>
-                    <input onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border-gray-300 border rounded-lg' />
+                    <input value={sellInputValue} onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border-gray-300 border rounded-lg' />
                 </div>
                 <div className='flex items-center mt-[0.5rem]'>
                     <span className='text-sm font-semibold text-green-500 mr-[1rem]'>Buy</span>
                     <div className='relative'>
                         <button onClick={buyButtonHandler} className='bg-gray-100 h-[2.7rem] border-none flex justify-between items-center text-base text-gray-600 w-[10rem] font-semibold rounded-lg border px-4'>
-                            <p>{buyCoin}</p>
+                            <p className='overflow-hidden whitespace-nowrap w-[85%] text-left'>{buyCoin}</p>
                             <VscTriangleDown size={'20'} />
                         </button>
-                        {isBuyOpen && <div className='overflow-y-scroll h-[30rem] absolute text-sm font-semibold bg-gray-100 rounded-lg top-[-30.2rem]'>
-                            {buyCurrencies.map((currency, index) => (<div key={index} onClick={() => buyHandler(currency)} className={` bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300 items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize ${index === 0 ? 'rounded-t-lg' : ''} ${index === buyCurrencies.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{currency.name}</div>))}
+                        {isBuyOpen && <div className='overflow-y-scroll z-10 h-[30rem] absolute text-sm font-semibold bg-gray-100 rounded-lg top-[-30.2rem]'>
+                            {buyCurrencies.map((currency, index) => (<div key={index} onClick={() => buyHandler(currency)} className={` bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300 items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === buyCurrencies.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{currency.name}</div>))}
                         </div>}
                     </div>
                     <div className='h-[2.7rem] w-[8rem] ml-[2.5rem] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
