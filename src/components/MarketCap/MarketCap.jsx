@@ -7,31 +7,28 @@ import './MarketCap.css';
 
 const MarketCap = () => {
     const dispatch = useDispatch();
-
+    const vsCurrency = useSelector((state) => state.vsCurrency.vsCurrency);
     const coins = useSelector((state) => state.coins.coins);
     const loading = useSelector((state) => state.coins.loading);
     const error = useSelector((state) => state.coins.error);
-    console.log("Hello3");
-
+    const searchKey = useSelector((state) => state.searchKey.searchKey);
     useEffect(() => {
         const fetchData1 = async () => {
             try {
                 dispatch(fetchData());
-                // const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
-                const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false');
-                // const coins = await response.json();
-                const coins = await response.data;
+                const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${vsCurrency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
+                // const response = await axios.get(`http://localhost:3000/api/coins/marketcap?vsCurrency=${vsCurrency}`);
+                const coins = await response.json();
+                // const coins = await response.data;
                 dispatch(fetchDataSuccess(coins));
             } catch (error) {
                 dispatch(fetchDataError(error.message));
+                console.log(error);
             }
         };
         dispatch(fetchData());
         fetchData1();
-        console.log("Hello1");
-    }, [dispatch]);
-
-    console.log("Hello2");
+    }, [dispatch, vsCurrency]);
 
     // Handle loading state
     if (loading) {
@@ -43,24 +40,18 @@ const MarketCap = () => {
         return <p>Failed to fetch data. Please try again later.</p>;
     }
 
+    const filteredCoins = coins.filter((coin) => coin.name.toUpperCase().includes(searchKey.toUpperCase()));
 
 
     return (
         <div className='h-full'>
-            {/* {coins.length > 0 ? (
-                coins.map((coin) => (
-                    <p key={coin.id}>{coin.name}, Current Price: {coin.current_price}, Market Cap: {coin.market_cap}</p>
-                ))
-            ) : (
-                <p>No data found.</p>
-            )} */}
             <div className='h-[8%] py-5 pr-5 pl-3 text-lg font-bold border-b flex items-center justify-center'>
                 <h1 className='flex items-center justify-center'>
                     Cryptocurrency by market cap
                 </h1>
             </div>
             <div className='h-[92%] overflow-y-scroll'>
-                {coins.map((coin) => (
+                {filteredCoins.map((coin) => (
                     <div key={coin.id} className='flex justify-between py-5 pl-3 pr-5 border-y'>
                         <div className='flex items-center pr-1'>
                             <img src={coin.image} className='w-12' alt="" />

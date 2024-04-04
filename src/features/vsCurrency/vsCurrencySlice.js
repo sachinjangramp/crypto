@@ -1,13 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    coins: [],
+    vsCurrency: 'inr',
     loading: false,
     error: null,
-};
+}
 
-export const coinsSlice = createSlice({
-    name: 'coins',
+export const vsCurrencySlice = createSlice({
+    name: 'vsCurrency',
     initialState,
     reducers: {
         fetchData: (state) => {
@@ -15,16 +15,14 @@ export const coinsSlice = createSlice({
         },
         fetchDataSuccess: (state, action) => {
             state.loading = false;
-            state.coins = action.payload;
+            state.vsCurrency = action.payload;
         },
         fetchDataError: (state, action) => {
             state.loading = false;
             state.error = action.payload;
         }
-
     }
 })
 
-export const {fetchData, fetchDataSuccess, fetchDataError} = coinsSlice.actions;
-
-export default coinsSlice.reducer;
+export const {fetchData, fetchDataError, fetchDataSuccess} = vsCurrencySlice.actions;
+export default vsCurrencySlice.reducer;
