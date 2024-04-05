@@ -119,7 +119,7 @@ const ExchangeCoins = () => {
                     <span className='text-sm font-semibold text-red-500 mr-[1.2rem]'>Sell</span>
                     <div className='relative'>
                         <button onClick={sellButtonHandler} className='bg-gray-100 h-[2.7rem] border-none flex justify-between items-center text-base text-gray-600 w-[10rem] font-semibold rounded-lg border px-4'>
-                            <p className='overflow-hidden whitespace-nowrap w-[100%]'>{sellCoin}</p>
+                            <p className='overflow-hidden whitespace-nowrap w-[100%] text-left'>{sellCoin}</p>
                             {isSellOpen ? <VscTriangleUp size={'20'} /> : <VscTriangleDown size={'20'} />}
                         </button>
                         {isSellOpen && <div className={`absolute text-sm z-10 font-semibold bg-gray-100 rounded-lg`} style={{ top: topPosition }}>

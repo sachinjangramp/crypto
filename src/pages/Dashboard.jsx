@@ -19,15 +19,15 @@ const dashboard = () => {
                     <div className='grid col-span-1 gap-5 grid-rows-12 row-span-12'>
                         <div className='flex justify-between w-full row-span-1 bg-gray-100 rounded-lg'>
                             <div className='w-[9.5%]'>
-                                {/* <CurrencySelector /> */}
+                                <CurrencySelector />
                             </div>
                             <div className='w-[88.5%]'>
-                                {/* <SearchBar /> */}
+                                <SearchBar />
                             </div>
                         </div>
                         <div className='grid grid-cols-11 gap-5 row-span-11 grid-rows-12'>
                             <div className='col-span-11 bg-white rounded-lg row-span-7'>
-                                {/* <ChartComponent /> */}
+                                <ChartComponent />
                             </div>
                             <div className='grid col-span-11 row-span-5 gap-5 pr-5 grid-cols-new grid-rows-12'>
                                 <div className='col-span-1 bg-white rounded-lg row-span-12'>
@@ -40,7 +40,7 @@ const dashboard = () => {
                         </div>
                     </div>
                     <div className='col-span-1 bg-white rounded-lg row-span-12'>
-                        {/* <MarketCap /> */}
+                        <MarketCap />
                     </div>
                 </div>
             </div>

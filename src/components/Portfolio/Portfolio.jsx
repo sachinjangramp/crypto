@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Pie } from 'react-chartjs-2';
 import { CategoryScale, Chart } from "chart.js/auto";
 import { useSelector } from 'react-redux';
@@ -7,8 +7,24 @@ Chart.register(CategoryScale);
 
 const Portfolio = () => {
     const yourCoins = useSelector((state) => state.yourCoins.yourCoins);
-    // const [keys, setKeys] = useState([]);
-    const keys = yourCoins.map((coin) => Object.keys(coin)[0]);
+    const coins = useSelector((state) => state.coins.coins);
+    const [total, setTotal] = useState(0);
+    const [keys, setKeys] = useState([]);
+
+    useEffect(() => {
+        setTotal(() => 0);
+        const newKeys = yourCoins.map((coin) => {
+            for (const c of coins) {
+                if (c.name === Object.keys(coin)[0]) {
+                    setTotal((prev) => prev + c.current_price);
+                    break;
+                }
+            }
+            return Object.keys(coin)[0]
+        });
+        setKeys(newKeys);
+    }, [coins, yourCoins]);
+
     let largestKey = 0;
     for (const key of keys) {
         if (key.length > largestKey)
@@ -81,7 +97,7 @@ const Portfolio = () => {
         <div className='p-5 h-[100%]'>
             <div className='flex items-center justify-between text-lg font-bold'>
                 <span>Portfolio</span>
-                <span className='text-base font-semibold'>Total Value: $1000</span>
+                <span className='text-base font-semibold'>Total Value: {total.toFixed(2)}</span>
             </div>
             <div className='w-[15rem] h-[88%] mx-auto' style={{ width: width }}>
                 <Pie data={data} options={options} plugins={[plugin]} />
