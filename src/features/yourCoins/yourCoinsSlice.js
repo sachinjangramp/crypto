@@ -6,12 +6,12 @@ const initialState = {
         unit: 'BTC'
     },
     {
-        Ether: 5000,
-        unit: 'ETH'
+        'United Arab Emirates Dirham': 15,
+        unit: 'DH'
     },
     {
-        Litecoin: 500,
-        unit: 'LTC'
+        Ether: 30,
+        unit: 'ETH'
     },
 ],
     loading: false,

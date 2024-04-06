@@ -62,7 +62,6 @@ const ExchangeCoins = () => {
             const array = Object.entries(response.data.rates);
             const array2 = array.map(([key, value]) => value);
             setBuyCurrencies(array2);
-            console.log(array2);
         }
         catch (error) {
             console.log(error);
@@ -108,8 +107,6 @@ const ExchangeCoins = () => {
 
     const topPosition = `${-((yourCoins.length) * 2.7) - 0.2}rem`;
 
-    console.log(yourCoins);
-
     return (
         <div className='p-5'>
             <h1 className='text-lg font-bold'>Exchange Coins</h1>
@@ -118,31 +115,31 @@ const ExchangeCoins = () => {
                 <div className='flex items-center mt-[0.5rem]'>
                     <span className='text-sm font-semibold text-red-500 mr-[1.2rem]'>Sell</span>
                     <div className='relative'>
-                        <button onClick={sellButtonHandler} className='bg-gray-100 h-[2.7rem] border-none flex justify-between items-center text-base text-gray-600 w-[10rem] font-semibold rounded-lg border px-4'>
-                            <p className='overflow-hidden whitespace-nowrap w-[100%] text-left'>{sellCoin}</p>
-                            {isSellOpen ? <VscTriangleUp size={'20'} /> : <VscTriangleDown size={'20'} />}
+                        <button onClick={sellButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[10rem] font-semibold rounded-lg border px-3 ${isSellOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
+                            <p className={`overflow-hidden whitespace-nowrap w-[85%] mr-2 text-left`}>{sellCoin}</p>
+                            {isSellOpen ? <VscTriangleUp size={'1.1rem'} /> : <VscTriangleDown size={'1.1rem'} />}
                         </button>
-                        {isSellOpen && <div className={`absolute text-sm z-10 font-semibold bg-gray-100 rounded-lg`} style={{ top: topPosition }}>
-                            {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
+                        {isSellOpen && <div className={`absolute text-sm z-10 font-semibold bg-gray-100 rounded-lg border border-gray-300`} style={{ top: topPosition }}>
+                            {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[17.2rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
                         </div>}
                     </div>
-                    <input value={sellInputValue} onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border-gray-300 border rounded-lg' />
+                    <input value={sellInputValue} onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border border-gray-300 p-2 rounded-lg' />
                 </div>
                 <div className='flex items-center mt-[0.5rem]'>
                     <span className='text-sm font-semibold text-green-500 mr-[1rem]'>Buy</span>
                     <div className='relative'>
-                        <button onClick={buyButtonHandler} className='bg-gray-100 h-[2.7rem] border-none flex justify-between items-center text-base text-gray-600 w-[10rem] font-semibold rounded-lg border px-4'>
-                            <p className='overflow-hidden whitespace-nowrap w-[85%] text-left'>{buyCoin}</p>
-                            <VscTriangleDown size={'20'} />
+                        <button onClick={buyButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[10rem] font-semibold rounded-lg border px-3 ${isBuyOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
+                            <p className='overflow-hidden whitespace-nowrap w-[85%] mr-2 text-left'>{buyCoin}</p>
+                            {isBuyOpen ? <VscTriangleUp size={'1.1rem'} /> : <VscTriangleDown size={'1.1rem'} />}
                         </button>
-                        {isBuyOpen && <div className='overflow-y-scroll z-10 h-[30rem] absolute text-sm font-semibold bg-gray-100 rounded-lg top-[-30.2rem]'>
+                        {isBuyOpen && <div className='overflow-y-scroll border border-gray-300 z-10 h-[30rem] absolute text-sm font-semibold bg-gray-100 rounded-lg top-[-30.2rem]'>
                             {buyCurrencies.map((currency, index) => (<div key={index} onClick={() => buyHandler(currency)} className={` bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300 items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === buyCurrencies.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{currency.name}</div>))}
                         </div>}
                     </div>
-                    <div className='h-[2.7rem] w-[8rem] ml-[2.5rem] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
+                    <div className='h-[2.7rem] w-[8rem] ml-[3.15rem] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
                 </div>
             </div>
-            <button onClick={exchangeHandler} className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] rounded-lg mx-auto block mt-4'>Exchange</button>
+            <button onClick={exchangeHandler} className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] hover:scale-[102%] duration-300 rounded-lg mx-auto block mt-4'>Exchange</button>
         </div>
     )
 }
