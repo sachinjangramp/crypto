@@ -242,12 +242,29 @@ const ChartComponent = () => {
         {
             label: '',
             data: prices1.map(() => null), // Create transparent data points for Dataset
-            pointRadius: 0, // Make points invisible
+            pointRadius: 0,// Make points invisible
             backgroundColor: 'rgba(255, 255, 255, 0)',
             borderColor: 'rgba(255, 255, 255, 0)',
             hidden: true
         },
     ];
+
+    const lines = {
+        id: "lines",
+        beforeDatasetsDraw(chart) {
+            const { ctx, tooltip, chartArea: { top, bottom, } } = chart;
+
+            if (tooltip._active[0]) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'grey';
+                ctx.lineWidth = 1;
+                ctx.moveTo(tooltip._active[0].element.x, top);
+                ctx.lineTo(tooltip._active[0].element.x, bottom);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    };
 
 
     return (
@@ -402,9 +419,10 @@ const ChartComponent = () => {
                                         usePointStyle: true,
                                         pointStyle: 'circle'
                                     }
-                                }
+                                },
                             },
                         }}
+                        plugins={[lines]}
                     /> :
                     <Bar
                         data={{
@@ -483,6 +501,7 @@ const ChartComponent = () => {
                                 }
                             },
                         }}
+                        plugins={[lines]}
                     />
                 }
 
