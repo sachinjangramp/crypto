@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchData, fetchDataSuccess, fetchDataError } from '../../features/coins/coinsSlice';
 import axios from 'axios';
 import { VscTriangleDown } from "react-icons/vsc";
+import Loading from '../../assets/loading.gif'
 import './MarketCap.css';
 
 const MarketCap = () => {
@@ -22,6 +23,9 @@ const MarketCap = () => {
                 // const coins = await response.data;
                 dispatch(fetchDataSuccess(coins));
             } catch (error) {
+                setTimeout(() => {
+                    fetchData1();
+                }, 20000);
                 dispatch(fetchDataError(error.message));
                 console.log(error);
             }
@@ -31,20 +35,24 @@ const MarketCap = () => {
     }, [dispatch, vsCurrency]);
 
     // Handle loading state
-    if (loading) {
-        return <p>Loading data...</p>;
-    }
+    // if (loading) {
+    //     return <p>Loading data...</p>;
+    // }
 
-    // Handle errors
-    if (error) {
-        return <p>Failed to fetch data. Please try again later.</p>;
+    // // Handle errors
+    // if (error) {
+    //     return <p>Failed to fetch data. Please try again later.</p>;
+    // }
+
+    if (loading || error) {
+        return <div className='flex justify-center items-center w-full h-[100%]'><img src={Loading} alt="Loading" className='w-[4.5rem]' /></div>;
     }
 
     const filteredCoins = coins.filter((coin) => coin.name.toUpperCase().includes(searchKey.toUpperCase()));
 
 
     return (
-        <div className='h-full'>
+        <div className='h-full text-gray-700'>
             <div className='h-[8%] py-5 pr-5 pl-3 text-lg font-bold border-b flex items-center justify-center'>
                 <h1 className='flex items-center justify-center'>
                     Cryptocurrency by market cap
@@ -52,14 +60,14 @@ const MarketCap = () => {
             </div>
             <div className='h-[92%] overflow-y-scroll'>
                 {filteredCoins.map((coin) => (
-                    <div key={coin.id} className='flex justify-between py-5 pl-3 pr-5 border-y'>
+                    <div key={coin.id} className='flex justify-between py-3 pl-3 pr-5 border-y'>
                         <div className='flex items-center pr-1'>
                             <img src={coin.image} className='w-12' alt="" />
                         </div>
                         <div className='w-[100%]'>
                             <div className='flex items-center w-[100%] justify-between'>
                                 <h1 className='text-base font-bold'>{coin.name}</h1>
-                                <h1 className='text-sm font-bold'>Price: {coin.current_price}</h1>
+                                <h1 className='text-sm font-bold whitespace-nowrap'>Price: {coin.current_price.toFixed(2)}</h1>
                             </div>
                             <div className='flex items-center w-[100%] justify-between'>
                                 <h1 className='text-sm'>Mkt.Cap: {coin.market_cap}</h1>

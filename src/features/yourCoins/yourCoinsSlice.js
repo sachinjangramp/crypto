@@ -2,16 +2,16 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     yourCoins : [{
-        Bitcoin: 120,
+        Bitcoin: 5,
         unit: 'BTC'
     },
     {
-        Ether: 5000,
-        unit: 'ETH'
+        'United Arab Emirates Dirham': 15,
+        unit: 'DH'
     },
     {
-        Litecoin: 500,
-        unit: 'LTC'
+        Ether: 30,
+        unit: 'ETH'
     },
 ],
     loading: false,
@@ -30,7 +30,9 @@ export const yourCoinsSlice = createSlice({
             let counter = 0;
             let key1 = Object.keys(action.payload[0])[0];
             let key2 = Object.keys(action.payload[1])[0];
-            let value1 = parseFloat(action.payload[0][key1]);
+            const currentKeys = state.yourCoins.map((coin) => Object.keys(coin)[0]);
+            if ((currentKeys.includes(key1) && currentKeys.includes(key2)) || currentKeys.length < 6){
+                let value1 = parseFloat(action.payload[0][key1]);
             let value2 = parseFloat(action.payload[1][key2]);
             let value2Unit = action.payload[1]['unit'];
             // console.log(key1);
@@ -62,6 +64,10 @@ export const yourCoinsSlice = createSlice({
             });
             if (counter === 0)
             state.yourCoins.push({[key2]: value2, 'unit': value2Unit});
+            } else{
+                state.loading = false;
+                state.error = 'Reached the max limit of coins.';
+            }
         },
         fetchDataError: (state, action) => {
             state.loading = false;

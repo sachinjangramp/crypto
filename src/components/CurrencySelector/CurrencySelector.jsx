@@ -36,9 +36,11 @@ const CurrencySelector = () => {
     // console.log(vsCurrencies);
 
     return (
-        <div onClick={() => setIsOpen((prev) => !prev)} className='relative flex items-center justify-between w-full h-[100%] px-3 text-sm font-semibold text-black bg-white rounded-lg cursor-pointer'>
-            <p className='uppercase'>{selectedCurrency}</p>
-            {isOpen ? <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} /> : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
+        <div onClick={() => setIsOpen((prev) => !prev)} className={`relative flex items-center justify-between w-full h-[100%] px-3 text-sm font-semibold  bg-white rounded-lg cursor-pointer ${isOpen ? 'border-2 border-[#3660cb]' : ''}`}>
+            <div className={`${isOpen ? ' text-[#3660cb]' : ''} flex justify-between items-center w-[100%]`}>
+                <p className={`uppercase`}>{selectedCurrency}</p>
+                {isOpen ? <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} /> : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
+            </div>
             {isOpen && <div className='absolute left-[0] top-[2.8rem] z-30 w-[5.7rem] h-[25rem] overflow-y-scroll bg-white shadow-lg rounded-lg'>{vsCurrencies.map((vsCurrency, index) => (<div onClick={() => vsCurrencyHandler(vsCurrency)} key={index} className='w-full px-3 py-3 text-sm font-semibold uppercase border-b border-gray-300 cursor-pointer' >{vsCurrency}</div>))}</div>}
         </div>
     )

@@ -22,7 +22,6 @@ Chart.register(CategoryScale);
 const ChartComponent = () => {
     const dispatch = useDispatch();
     const dates1 = useSelector((state) => state.chartData.dates1);
-    const dates2 = useSelector((state) => state.chartData.dates2);
     const prices1 = useSelector((state) => state.chartData.prices1);
     const prices2 = useSelector((state) => state.chartData.prices2);
     const coins = useSelector((state) => state.coins.coins);
@@ -48,6 +47,7 @@ const ChartComponent = () => {
     const [isRangeChanged, setIsRangeChanged] = useState(false);
     const [previousCurrency, setPreviousCurrency] = useState('inr');
     const [previousRun, setPreviousRun] = useState('days');
+    const [duration, setDuration] = useState(1);
 
 
     const lineHandler = () => {
@@ -80,6 +80,7 @@ const ChartComponent = () => {
 
     const calendarIconHandler = () => {
         setIsRangePickerOpen(!israngePickerOpen);
+        setDuration(0);
         const temp = { ...selectionRange };
         if (isRangeChanged === true) {
             temp.endDate = new Date(temp.endDate.getTime() + 24 * 60 * 60 * 1000);
@@ -95,8 +96,8 @@ const ChartComponent = () => {
 
     const handleSelect = (ranges) => {
         setSelectionRange(ranges.selection);
-        console.log('selectionRange')
-        console.log(selectionRange)
+        // console.log('selectionRange')
+        // console.log(selectionRange)
         setIsRangeChanged(true);
     };
 
@@ -112,14 +113,14 @@ const ChartComponent = () => {
                             `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                         );
                         const dates1 = response1.data.prices.map((price) => price[0]);
-                        const prices1 = response1.data.prices.map((price) => price[1]);
+                        const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
                         if (whichCoins.length === 2) {
                             const response2 = await axios.get(
                                 // `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
                                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                             );
                             const dates2 = response2.data.prices.map((price) => price[0]);
-                            const prices2 = response2.data.prices.map((price) => price[1]);
+                            const prices2 = response2.data.prices.map((price) => price[1].toFixed(2));
                             dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
                         }
                         else {
@@ -131,14 +132,14 @@ const ChartComponent = () => {
                             `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                         );
                         const dates1 = response1.data.prices.map((price) => price[0]);
-                        const prices1 = response1.data.prices.map((price) => price[1]);
+                        const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
                         if (whichCoins.length === 2) {
                             const response2 = await axios.get(
                                 // `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
                                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                             );
                             const dates2 = response2.data.prices.map((price) => price[0]);
-                            const prices2 = response2.data.prices.map((price) => price[1]);
+                            const prices2 = response2.data.prices.map((price) => price[1].toFixed(2));
                             dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
                         }
                         else {
@@ -155,14 +156,14 @@ const ChartComponent = () => {
                             `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                         );
                         const dates1 = response1.data.prices.map((price) => price[0]);
-                        const prices1 = response1.data.prices.map((price) => price[1]);
+                        const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
                         if (whichCoins.length === 2) {
                             const response2 = await axios.get(
                                 // `http://localhost:3000/api/coins2?whichCoin=${whichCoins[1]}&days=${days}`
                                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
                             );
                             const dates2 = response2.data.prices.map((price) => price[0]);
-                            const prices2 = response2.data.prices.map((price) => price[1]);
+                            const prices2 = response2.data.prices.map((price) => price[1].toFixed(2));
                             dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
                         }
                         else {
@@ -177,14 +178,14 @@ const ChartComponent = () => {
                             `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                         );
                         const dates1 = response1.data.prices.map((price) => price[0]);
-                        const prices1 = response1.data.prices.map((price) => price[1]);
+                        const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
                         if (whichCoins.length === 2) {
                             const response2 = await axios.get(
                                 // `http://localhost:3000/api/coins2/range?whichCoin=${whichCoins[1]}&from=${from}&to=${to}`
                                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
                             );
                             const dates2 = response2.data.prices.map((price) => price[0]);
-                            const prices2 = response2.data.prices.map((price) => price[1]);
+                            const prices2 = response2.data.prices.map((price) => price[1].toFixed(2));
                             dispatch(fetchChartDataSuccess({ dates1, dates2, prices1, prices2 }))
                         }
                         else {
@@ -241,34 +242,51 @@ const ChartComponent = () => {
         {
             label: '',
             data: prices1.map(() => null), // Create transparent data points for Dataset
-            pointRadius: 0, // Make points invisible
+            pointRadius: 0,// Make points invisible
             backgroundColor: 'rgba(255, 255, 255, 0)',
             borderColor: 'rgba(255, 255, 255, 0)',
             hidden: true
         },
     ];
 
+    const lines = {
+        id: "lines",
+        beforeDatasetsDraw(chart) {
+            const { ctx, tooltip, chartArea: { top, bottom, } } = chart;
+
+            if (tooltip._active[0]) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'grey';
+                ctx.lineWidth = 1;
+                ctx.moveTo(tooltip._active[0].element.x, top);
+                ctx.lineTo(tooltip._active[0].element.x, bottom);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    };
+
 
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
             <div className="flex items-center justify-between w-full">
                 <div className="grid grid-rows-1 gap-1 grid-cols-6 w-[19rem] h-[2rem] text-sm">
-                    <div onClick={() => { setDays(1); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(1); setDuration(1); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 1 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1D</p>
                     </div>
-                    <div onClick={() => { setDays(7); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(7); setDuration(7); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 7 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1W</p>
                     </div>
-                    <div onClick={() => { setDays(30); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(30); setDuration(30); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 30 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1M</p>
                     </div>
-                    <div onClick={() => { setDays(180); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(180); setDuration(180); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 180 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>6M</p>
                     </div>
-                    <div onClick={() => { setDays(365); setRun(() => Math.random()); setClicked(() => true) }} className="flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => { setDays(365); setDuration(365); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 365 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1Y</p>
                     </div>
-                    <div onClick={() => calendarIconHandler()} className="relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer">
+                    <div onClick={() => calendarIconHandler()} className={`relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 0 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <div className="">
                             <IoCalendarOutline />
                         </div>
@@ -285,20 +303,20 @@ const ChartComponent = () => {
                     />
                 </div>}
 
-                <div className="flex justify-between w-[47%] relative">
-                    <button onClick={() => setIsCryptoOpen(prev => !prev)} className="bg-gray-100 h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border px-3">
-                        <p className="mr-2">
+                <div className="flex justify-between w-[28%] relative">
+                    <button onClick={() => setIsCryptoOpen(prev => !prev)} className={`bg-gray-100 h-[2.5rem] w-[10rem] flex justify-between items-center text-sm font-semibold rounded-lg border px-3 ${isCryptoOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
+                        <p className="mr-2 overflow-hidden whitespace-nowrap w-[90%] text-left">
                             {selectedCryptoOption.join(', ')}
                         </p>
                         {isCryptoOpen ?
-                            <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} />
-                            : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
+                            <VscTriangleUp size={'20'} />
+                            : <VscTriangleDown size={'20'} />}
                     </button>
                     {isCryptoOpen && <div className="w-[13rem] h-[19.5rem] absolute top-[2.7rem] left-[0]">
                         {isCryptoOpen && <div className="overflow-y-scroll h-[90%] bg-gray-100 border  rounded-t-lg  text-sm font-semibold justify-center">
                             {coins.map((coin) => {
                                 return (
-                                    <div key={coin.id} onClick={() => handleCryptoClick(coin)} className="w-[13rem] px-[0.79rem] flex items-center pt-[0.5rem] pb-[0.7rem] border-b border-gray-300 cursor-pointer text-sm font-semibold">
+                                    <div key={coin.id} onClick={() => handleCryptoClick(coin)} className="w-[13rem] px-[0.79rem] flex items-center h-[2.5rem] border-b border-gray-300 cursor-pointer text-sm font-semibold">
                                         <input type="checkbox" checked={checkedCoins.includes(coin.id)} onChange={() => { }} className="mr-2 cursor-pointer " />{coin.name}
                                     </div>
                                 )
@@ -306,19 +324,19 @@ const ChartComponent = () => {
                         </div>}
                         {isCryptoOpen && <button onClick={() => handleDoneClick()} className="w-full py-2 text-white rounded-b-lg bg-gradient-to-r from-cyan-500 to-blue-500">Done</button>}
                     </div>}
-                    <button onClick={() => setIsOpen(prev => !prev)} className="bg-gray-100 w-[5rem] h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border">
+                    <button onClick={() => setIsOpen(prev => !prev)} className={`bg-gray-100 w-[5rem] h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border ${isOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p className="mr-2">
                             {selectedOption}
                         </p>
                         {isOpen ?
-                            <VscTriangleUp style={{ width: "1.1rem", height: "1.1rem" }} />
-                            : <VscTriangleDown style={{ width: "1.1rem", height: "1.1rem" }} />}
+                            <VscTriangleUp size={'1.1rem'} />
+                            : <VscTriangleDown size={'1.1rem'} />}
                     </button>
-                    {isOpen && <div className="w-[5rem] h-[4rem] bg-gray-100 border absolute rounded-lg top-[2.7rem] right-0 flex flex-col text-sm font-semibold justify-center">
-                        <div onClick={barHandler} className="w-full h-[50%] px-[0.79rem] rounded-t-lg flex items-end pb-[0.2rem] border-b cursor-pointer">
+                    {isOpen && <div className="w-[5rem] h-[5rem] bg-gray-100 border absolute rounded-lg top-[2.7rem] right-0 flex flex-col text-sm font-semibold justify-center">
+                        <div onClick={barHandler} className="w-full h-[50%] px-[0.79rem]  rounded-t-lg flex items-center border-b cursor-pointer">
                             Bar
                         </div>
-                        <div onClick={lineHandler} className="w-full h-[50%] px-[0.79rem] rounded-b-lg flex items-start pt-[0.2rem] border-t cursor-pointer">
+                        <div onClick={lineHandler} className="w-full h-[50%] px-[0.79rem] rounded-b-lg flex items-center cursor-pointer">
                             Line
                         </div>
                     </div>}
@@ -374,11 +392,11 @@ const ChartComponent = () => {
                                         beginAtZero: true,
                                         callback: function (value, index, values) {
                                             if (value >= 1000000) {
-                                                return value / 1000000 + "M";
+                                                return (value / 1000000).toFixed(2) + "M";
                                             } else if (value >= 1000) {
-                                                return value / 1000 + "K";
+                                                return (value / 1000).toFixed(2) + "K";
                                             } else {
-                                                return value;
+                                                return value.toFixed(2);
                                             }
                                         },
                                     },
@@ -401,9 +419,10 @@ const ChartComponent = () => {
                                         usePointStyle: true,
                                         pointStyle: 'circle'
                                     }
-                                }
+                                },
                             },
                         }}
+                        plugins={[lines]}
                     /> :
                     <Bar
                         data={{
@@ -452,11 +471,11 @@ const ChartComponent = () => {
                                         beginAtZero: true,
                                         callback: function (value, index, values) {
                                             if (value >= 1000000) {
-                                                return value / 1000000 + "M";
+                                                return (value / 1000000).toFixed(2) + "M";
                                             } else if (value >= 1000) {
-                                                return value / 1000 + "K";
+                                                return (value / 1000).toFixed(2) + "K";
                                             } else {
-                                                return value;
+                                                return value.toFixed(2);
                                             }
                                         },
                                     },
@@ -482,6 +501,7 @@ const ChartComponent = () => {
                                 }
                             },
                         }}
+                        plugins={[lines]}
                     />
                 }
 
