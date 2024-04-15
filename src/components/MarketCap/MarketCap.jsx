@@ -53,12 +53,12 @@ const MarketCap = () => {
 
     return (
         <div className='h-full text-gray-700'>
-            <div className='h-[8%] py-5 pr-5 pl-3 text-lg font-bold border-b flex items-center justify-center'>
+            <div className='lg:h-[8%] py-5 pr-5 pl-3 text-lg font-bold border-b flex items-center justify-center'>
                 <h1 className='flex items-center justify-center'>
                     Cryptocurrency by market cap
                 </h1>
             </div>
-            <div className='h-[92%] overflow-y-scroll'>
+            <div className='lg:h-[92%] lg:overflow-y-scroll'>
                 {filteredCoins.map((coin) => (
                     <div key={coin.id} className='flex justify-between py-3 pl-3 pr-5 border-y'>
                         <div className='flex items-center pr-1'>
