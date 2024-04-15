@@ -1,70 +1,97 @@
-# Getting Started with Create React App
+<h1 align="center">
+  <br />
+  <br/>
+  Cryptocurrency Dashboard
+  <h3 align="center">
+    Discover Cryptos, charts, and MarketCaps !
+</h3>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br/>
 
-## Available Scripts
 
-In the project directory, you can run:
+<!-- TABLE OF CONTENTS -->
+<details>
+    <summary>Content</summary>
+    <ol>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#technology-languages-used">Technology/ Languages Used</a></li>
+        <li><a href="#how-to-run-locally">How to Run Locally</a></li>
+        <li><a href="#how-to-contribute">How to Contribute</a></li>
+    </ol>
+</details>
 
-### `npm start`
+<!-- Project Introduction -->
+## **Introduction**
+<p>
+    Cryptocurrency Dashboard is a web application that allows users to view cryptocurrency trends and their past prices through graphical visualization.</p>
+<br />
+Visit <a href="https://cryptocurrency-dashboard-tau.vercel.app/">Cryptocurrency-dashboard</a> and discover cryptos, charts, and MarketCaps!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<br />
+<!-- FEATURES -->
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## **FEATURES**
+- Users can explore dynamic data visuals with interactive graphs.
+- Users can search for cryptocurrencies.
+- Cryptocurrencies can be sorted.
+- Live previews of cryptocurrencies are available for users.
+- user can view the app in Fullscreen mode
+- Users can select different chart types to visualize data.
+- Duration buttons enable users to track past and current cryptocurrency prices via graphs.
+- The sidebar displays profit/loss percentages on a 24-hour basis.
+- The Crypto Exchange feature facilitates currency conversion between different cryptocurrencies.
+- The interface is designed to be responsive, ensuring compatibility across various devices.
 
-### `npm test`
+<br />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<!-- BUILT WITH -->
 
-### `npm run build`
+## **Technology/ Languages Used**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- React
+- Tailwind CSS
+- ReduxJS Toolkit
+- ReactJS
+- ChartJS
+- CoinGeckoAPI
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br />
+<!-- HOW TO RUN LOCALLY -->
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## **How to Run locally**
+- To run this project locally, use the following command in your CLI:
 
-### `npm run eject`
+```bash
+  git clone https://github.com/ankit-devhub/crypto-dashboard.git
+```
+- Open your favorite code editor and run locally!
+```bash
+  npm install
+  npm start
+```
+- Go to browser and search localhost:3000
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<br />
+<!-- CONTRIBUTING -->
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## **How to Contribute**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Contributions and ideas to this library are more than welcome! <br />
+If you want to contribute or have ideas for this project, just fork the repo and create a PR. If you spot a bug, you are more than welcome to open an issue! Do ⭐ this project! 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Contribution Guidelines
+1. Fork the Project
+2. Creata a branch for your feature/ idea. Please do give a good name for the branch that tells about the feature.
+3. Stage your changes
+4. Commit your changes
+5. Push the changes to your remote branch
+6. Open and Create a PR
 
-## Learn More
+<br />
+  
+## NOTE
+  <p> This capstone project is associated with <a href="https://www.almabetter.com">Almabetter</a>.</p>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## DISCLAIMER
+<p> I don't own any of the logos or images used in the project all belongs to their respected owners. </p>
