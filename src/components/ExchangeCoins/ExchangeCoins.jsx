@@ -137,7 +137,7 @@ const ExchangeCoins = () => {
                             {buyCurrencies.map((currency, index) => (<div key={index} onClick={() => buyHandler(currency)} className={` bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300 items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === buyCurrencies.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{currency.name}</div>))}
                         </div>}
                     </div>
-                    <div className='h-[2.7rem] w-[30%] ml-[11%] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
+                    <div className='h-[2.7rem] w-[30%] ml-[11%] text-green-500 flex items-center p-[0.6rem]'>{buyOutputValue.toFixed(2)}</div>
                 </div>
             </div>
             <button onClick={exchangeHandler} className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] hover:scale-[102%] duration-300 rounded-lg mx-auto block mt-4'>Exchange</button>
