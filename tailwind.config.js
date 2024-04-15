@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         '15': 'repeat(15, minmax(0, 1fr))',
-        'footer': '73% 27%',
+        'footer': '71% 29%',
         'new': '48% 52%',
       }
     },

@@ -10,9 +10,11 @@ const Portfolio = () => {
     const coins = useSelector((state) => state.coins.coins);
     const [total, setTotal] = useState(0);
     const [keys, setKeys] = useState([]);
+    const [units, setUnits] = useState([]);
 
     useEffect(() => {
         setTotal(() => 0);
+        let units = [];
         const newKeys = yourCoins.map((coin) => {
             for (const c of coins) {
                 if (c.name === Object.keys(coin)[0]) {
@@ -20,9 +22,11 @@ const Portfolio = () => {
                     break;
                 }
             }
+            units.push(coin['unit']);
             return Object.keys(coin)[0]
         });
         setKeys(newKeys);
+        setUnits(units);
     }, [coins, yourCoins]);
 
     let largestKey = 0;
@@ -39,6 +43,29 @@ const Portfolio = () => {
                 position: 'right',
                 rtl: true,
                 labels: {
+                    // generateLabels: function (chart) {
+                    //     const data = chart.data;
+                    //     if (data.labels.length && data.datasets.length) {
+                    //         return data.labels.map(function (label, i) {
+                    //             const ds = data.datasets[0];
+                    //             const unit = units[i]; // Get the unit for this label
+                    //             const backgroundColor = ds.backgroundColor[i];
+
+                    //             return {
+                    //                 text: unit, // Only include the unit
+                    //                 fillStyle: backgroundColor, // Use dataset background color for fill
+                    //                 strokeStyle: backgroundColor, // Use dataset background color for stroke
+                    //                 lineWidth: 1,
+                    //                 pointStyle: 'circle',
+                    //                 hidden: false,
+                    //                 // Extra data used for toggling the datasets
+                    //                 datasetIndex: 0,
+                    //                 index: i
+                    //             };
+                    //         });
+                    //     }
+                    //     return [];
+                    // },
                     usePointStyle: true,
                     pointStyle: 'circle',
                     boxHeight: 8,
@@ -58,13 +85,11 @@ const Portfolio = () => {
             const fitValue = chart.legend.fit;
             chart.legend.fit = function fit() {
                 fitValue.bind(chart.legend)();
-                let width = this.width += 45 + (largestKey * 3);
+                let width = this.width += 10 + (largestKey * 3);
                 return width;
             }
         }
     }
-
-    const width = `${15 + largestKey / 3.1}rem`;
 
     const data = {
         labels: [...keys],
@@ -97,10 +122,12 @@ const Portfolio = () => {
         <div className='p-5 h-[100%]'>
             <div className='flex items-center justify-between text-lg font-bold'>
                 <span>Portfolio</span>
-                <span className='text-base font-semibold'>Total Value: {total.toFixed(2)}</span>
+                <span className='ml-3 overflow-scroll text-base font-semibold whitespace-nowrap sm:ml-0'>Total Value: {total.toFixed(2)}</span>
             </div>
-            <div className='w-[15rem] h-[88%] mx-auto' style={{ width: width }}>
-                <Pie data={data} options={options} plugins={[plugin]} />
+            <div className='h-[88.5%] w-[100%] flex justify-center items-center'>
+                <div className='w-[100%] h-[80%] mx-auto'>
+                    <Pie data={data} options={options} plugins={[plugin]} />
+                </div>
             </div>
         </div>
     )

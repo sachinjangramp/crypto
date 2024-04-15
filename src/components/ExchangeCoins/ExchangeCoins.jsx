@@ -110,12 +110,13 @@ const ExchangeCoins = () => {
     return (
         <div className='p-5'>
             <h1 className='text-lg font-bold'>Exchange Coins</h1>
-            <div className='mr-[5rem] w-[27.95rem]'>
-                <p className='text-sm font-semibold text-right mr-[7.6rem]'>Enter value</p>
-                <div className='flex items-center mt-[0.5rem]'>
-                    <span className='text-sm font-semibold text-red-500 mr-[1.2rem]'>Sell</span>
-                    <div className='relative'>
-                        <button onClick={sellButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[10rem] font-semibold rounded-lg border px-3 ${isSellOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
+            <div className='mr-[5rem] w-[100%]'>
+
+                <div className='flex items-center mt-[1.5rem] relative'>
+                    <p className='text-sm font-semibold absolute left-[58%] top-[-55%]'>Enter value</p>
+                    <span className='text-sm font-semibold text-red-500 mr-[4.5%]'>Sell</span>
+                    <div className='relative w-[36.8%]'>
+                        <button onClick={sellButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[100%] font-semibold rounded-lg border px-3 ${isSellOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
                             <p className={`overflow-hidden whitespace-nowrap w-[85%] mr-2 text-left`}>{sellCoin}</p>
                             {isSellOpen ? <VscTriangleUp size={'1.1rem'} /> : <VscTriangleDown size={'1.1rem'} />}
                         </button>
@@ -123,12 +124,12 @@ const ExchangeCoins = () => {
                             {yourCoins.map((currency, index) => (<div key={index} onClick={() => sellHandler(currency)} className={`bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300  items-center text-base text-gray-600 w-[17.2rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === yourCoins.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{Object.keys(currency)[0]}</div>))}
                         </div>}
                     </div>
-                    <input value={sellInputValue} onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[8rem] ml-[2.5rem] border border-gray-300 p-2 rounded-lg' />
+                    <input value={sellInputValue} onChange={(event) => sellInputHandler(event)} placeholder={` Avl: ${currentValue.toFixed(2)} ${unit}`} type="number" className='h-[2.7rem] w-[30%] ml-[11%] border border-gray-300 p-2 rounded-lg overflow-hidden' />
                 </div>
                 <div className='flex items-center mt-[0.5rem]'>
-                    <span className='text-sm font-semibold text-green-500 mr-[1rem]'>Buy</span>
-                    <div className='relative'>
-                        <button onClick={buyButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[10rem] font-semibold rounded-lg border px-3 ${isBuyOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
+                    <span className='text-sm font-semibold text-green-500 mr-[3.8%]'>Buy</span>
+                    <div className='relative w-[36.8%]'>
+                        <button onClick={buyButtonHandler} className={`bg-gray-100 h-[2.7rem] flex justify-between items-center text-sm w-[100%] font-semibold rounded-lg border px-3 ${isBuyOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : 'border border-gray-300'}`}>
                             <p className='overflow-hidden whitespace-nowrap w-[85%] mr-2 text-left'>{buyCoin}</p>
                             {isBuyOpen ? <VscTriangleUp size={'1.1rem'} /> : <VscTriangleDown size={'1.1rem'} />}
                         </button>
@@ -136,7 +137,7 @@ const ExchangeCoins = () => {
                             {buyCurrencies.map((currency, index) => (<div key={index} onClick={() => buyHandler(currency)} className={` bg-gray-100 h-[2.7rem] flex justify-between border-b border-gray-300 items-center text-base text-gray-600 w-[18rem] font-semibold px-4 capitalize cursor-pointer ${index === 0 ? 'rounded-t-lg' : ''} ${index === buyCurrencies.length - 1 ? 'rounded-b-lg border-none ' : ''}`}>{currency.name}</div>))}
                         </div>}
                     </div>
-                    <div className='h-[2.7rem] w-[8rem] ml-[3.15rem] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
+                    <div className='h-[2.7rem] w-[30%] ml-[11%] text-green-500 flex items-center'>{buyOutputValue.toFixed(2)}</div>
                 </div>
             </div>
             <button onClick={exchangeHandler} className='w-[7rem] h-[2.7rem] font-semibold text-white text-sm bg-[#3660cb] hover:scale-[102%] duration-300 rounded-lg mx-auto block mt-4'>Exchange</button>

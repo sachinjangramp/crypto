@@ -270,7 +270,7 @@ const ChartComponent = () => {
     return (
         <div className="w-[100%] h-full py-4 pl-5 pr-5 flex flex-col justify-between">
             <div className="flex items-center justify-between w-full">
-                <div className="grid grid-rows-1 gap-1 grid-cols-6 w-[19rem] h-[2rem] text-sm">
+                <div className=" grid-rows-1 gap-1 grid-cols-6 w-[19rem] hidden sm:grid h-[2rem] text-sm">
                     <div onClick={() => { setDays(1); setDuration(1); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 1 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1D</p>
                     </div>
@@ -286,7 +286,7 @@ const ChartComponent = () => {
                     <div onClick={() => { setDays(365); setDuration(365); setRun(() => Math.random()); setClicked(() => true) }} className={`flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 365 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p>1Y</p>
                     </div>
-                    <div onClick={() => calendarIconHandler()} className={`relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg cursor-pointer ${duration === 0 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
+                    <div onClick={() => calendarIconHandler()} className={`relative flex items-center justify-center col-span-1 font-semibold bg-gray-100 rounded-lg invisible cursor-pointer ${duration === 0 ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <div className="">
                             <IoCalendarOutline />
                         </div>
@@ -303,8 +303,15 @@ const ChartComponent = () => {
                     />
                 </div>}
 
-                <div className="flex justify-between w-[28%] relative">
-                    <button onClick={() => setIsCryptoOpen(prev => !prev)} className={`bg-gray-100 h-[2.5rem] w-[10rem] flex justify-between items-center text-sm font-semibold rounded-lg border px-3 ${isCryptoOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
+                <div className="flex sm:justify-between sm:w-[28%] w-full relative">
+                    <button onClick={() => {
+                        setIsCryptoOpen(prev => !prev);
+                        if (previousRun === 'days') {
+                            setClicked(true);
+                        } else {
+                            setClicked(false);
+                        }
+                    }} className={`bg-gray-100 h-[2.5rem] sm:w-[64%] w-[45%] sm:mr-[0.7rem] mr-0 flex justify-between items-center text-sm font-semibold rounded-lg border px-3 ${isCryptoOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p className="mr-2 overflow-hidden whitespace-nowrap w-[90%] text-left">
                             {selectedCryptoOption.join(', ')}
                         </p>
@@ -324,7 +331,7 @@ const ChartComponent = () => {
                         </div>}
                         {isCryptoOpen && <button onClick={() => handleDoneClick()} className="w-full py-2 text-white rounded-b-lg bg-gradient-to-r from-cyan-500 to-blue-500">Done</button>}
                     </div>}
-                    <button onClick={() => setIsOpen(prev => !prev)} className={`bg-gray-100 w-[5rem] h-[2.5rem] flex justify-center items-center text-sm font-semibold rounded-lg border ${isOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
+                    <button onClick={() => setIsOpen(prev => !prev)} className={`bg-gray-100 w-[5rem] h-[2.5rem] ml-4 sm:ml-0 flex justify-center items-center text-sm font-semibold rounded-lg border ${isOpen ? 'border-2 border-[#3660cb] text-[#3660cb]' : ''}`}>
                         <p className="mr-2">
                             {selectedOption}
                         </p>
@@ -383,7 +390,7 @@ const ChartComponent = () => {
                             scales: {
                                 x: {
                                     ticks: {
-                                        maxTicksLimit: 12,
+                                        maxTicksLimit: 6,
                                     },
                                 },
                                 y: {
