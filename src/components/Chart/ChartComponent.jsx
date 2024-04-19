@@ -48,6 +48,7 @@ const ChartComponent = () => {
     const [previousCurrency, setPreviousCurrency] = useState('inr');
     const [previousRun, setPreviousRun] = useState('days');
     const [duration, setDuration] = useState(1);
+    const [limit, setLimit] = useState(6);
 
 
     const lineHandler = () => {
@@ -201,6 +202,33 @@ const ChartComponent = () => {
         };
         fetchChartData1();
     }, [dispatch, run, whichCoins, from, to, vsCurrency]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            // Define your breakpoints and set the value of 'a' accordingly
+            if (width < 450) {
+                setLimit(4);
+            } else if (width >= 450 && width < 700) {
+                setLimit(5);
+            } else if (width >= 700 && width < 900) {
+                setLimit(8);
+            } else if (width >= 900 && width < 1024) {
+                setLimit(10);
+            } else if (width >= 1024 && width < 1731) {
+                setLimit(8);
+            } else {
+                setLimit(10);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup function to remove the event listener when component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const datasets = prices2 ? [
         {
@@ -390,7 +418,7 @@ const ChartComponent = () => {
                             scales: {
                                 x: {
                                     ticks: {
-                                        maxTicksLimit: 6,
+                                        maxTicksLimit: limit,
                                     },
                                 },
                                 y: {
@@ -469,12 +497,12 @@ const ChartComponent = () => {
                             scales: {
                                 x: {
                                     ticks: {
-                                        maxTicksLimit: 12,
+                                        maxTicksLimit: 5,
                                     },
                                 },
                                 y: {
                                     ticks: {
-                                        maxTicksLimit: 10,
+                                        maxTicksLimit: limit,
                                         beginAtZero: true,
                                         callback: function (value, index, values) {
                                             if (value >= 1000000) {
