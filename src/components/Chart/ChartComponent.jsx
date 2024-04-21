@@ -175,7 +175,7 @@ const ChartComponent = () => {
             const width = window.innerWidth;
             // Define your breakpoints and set the value of 'a' accordingly
             if (width < 450) {
-                setLimit(4);
+                setLimit(3);
             } else if (width >= 450 && width < 700) {
                 setLimit(5);
             } else if (width >= 700 && width < 900) {
@@ -513,7 +513,7 @@ const ChartComponent = () => {
                     )}
                 </div>
             </div>
-            <div className="h-[85%]">
+            <div className="h-[85%] mt-3 md:mt-0">
                 {selectedOption === "Line" ? (
                     <Line
                         data={{
