@@ -513,7 +513,7 @@ const ChartComponent = () => {
                     )}
                 </div>
             </div>
-            <div className="h-[85%] mt-3 md:mt-0">
+            <div className="h-[85%] mt-3 lg:mt-0">
                 {selectedOption === "Line" ? (
                     <Line
                         data={{
