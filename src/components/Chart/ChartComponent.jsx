@@ -110,7 +110,7 @@ const ChartComponent = () => {
         const dates1 = response1.data.prices.map((price) => price[0]);
         const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
         if (whichCoins.length === 2) {
-            const response2 = axios.get(
+            const response2 = await axios.get(
                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart?vs_currency=${vsCurrency}&days=${days}`
             );
             const dates2 = response2.data.prices.map((price) => price[0]);
@@ -121,14 +121,14 @@ const ChartComponent = () => {
         }
     };
 
-    const rangeBasis = () => {
-        const response1 = axios.get(
+    const rangeBasis = async () => {
+        const response1 = await axios.get(
             `https://api.coingecko.com/api/v3/coins/${whichCoins[0]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
         );
         const dates1 = response1.data.prices.map((price) => price[0]);
         const prices1 = response1.data.prices.map((price) => price[1].toFixed(2));
         if (whichCoins.length === 2) {
-            const response2 = axios.get(
+            const response2 = await axios.get(
                 `https://api.coingecko.com/api/v3/coins/${whichCoins[1]}/market_chart/range?vs_currency=${vsCurrency}&from=${from}&to=${to}`
             );
             const dates2 = response2.data.prices.map((price) => price[0]);
@@ -146,20 +146,20 @@ const ChartComponent = () => {
                 if (previousCurrency !== vsCurrency) {
                     setPreviousCurrency(() => vsCurrency);
                     if (previousRun === "days") {
-                        daysBasis();
+                        await daysBasis();
                     } else {
-                        rangeBasis();
+                        await rangeBasis();
                     }
                 } else {
                     if (clicked) {
                         setPreviousCurrency(() => vsCurrency);
                         setPreviousRun(() => "days");
                         setClicked(() => false);
-                        daysBasis();
+                        await daysBasis();
                     } else {
                         setPreviousCurrency(() => vsCurrency);
                         setPreviousRun(() => "calendar");
-                        rangeBasis();
+                        await rangeBasis();
                     }
                 }
             } catch (error) {
